@@ -33,6 +33,13 @@
  
  ## Already leaked:
   
+  **Version 0.3c-Beta 1**
+  * Grammar fixes
+  * UI Design improvement
+  * instead removing sources.list first, added backup for restore your previous sources.list
+  * Upgraded Tor Browser Repo from 9.0.5 to version 10.0.5
+  * Seperated Driver installation
+
   **Version 0.3**
   * Added A Submenu For ```full_config``` Module
   * Fixed Some Termux Commands
