@@ -119,7 +119,7 @@ Legend
 
 MarCus
 
-[0n1cOn3](https://github.com/0n1cOn3
+[0n1cOn3](https://github.com/0n1cOn3)
 
 
 _Developer & Contact :_
