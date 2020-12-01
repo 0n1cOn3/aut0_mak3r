@@ -110,7 +110,7 @@ _Channels :_
          
 [Deepwaterleaks](https://t.me/deepwaterleaks2)
                
-_Helpers  :_
+_Contributers & Supporters  :_
 
 
 BlackFlare
@@ -119,8 +119,10 @@ Legend
 
 MarCus
 
+[0n1cOn3](https://github.com/0n1cOn3
 
-_Coder & Contact :_
+
+_Developer & Contact :_
   
 [mrblackx2_0](t.me/mrblackx2_0)
                 
