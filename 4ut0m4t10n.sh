@@ -16,7 +16,7 @@ backup_window_size="printf '\e[8;24;80t'"
 ipaddr="$(curl -s ifconfig.me)"
 ipaddr2="$(curl -s icanhazip.com)"
 host="$(uname -n)"
-version="0.3c"
+version="0.3d-beta1"
 
 #some colors
 RED="\e[31m"
@@ -36,7 +36,7 @@ printf '\e[8;37;100t'
 
 update(){
 	up=$(git pull &>/dev/null)
-	echo -e "${MAGENTA}[*] ${BLUE}Checking if you up-to-date...."
+	echo -e "${MAGENTA}[*] ${BLUE}Check if you up-to-date..."
 	echo ""
 	sleep 0.5
 	if [[ "$up" == "Already up to date." ]]
@@ -258,7 +258,7 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 		fi
 		clear
 		sleep 1.5
-		pause 'Press [Enter] to continue to start....'
+		pause 'Press [Enter] to Start'
 		clear
 		echo -e $YELLOW"[!] Starting package checking dependencies.."
 		sleep 0.5
@@ -271,19 +271,20 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 		clear	
 		echo -e "${CYAN}[!] Configuring your source list..."
 		sleep 0.7
+		sources.bk
 		sudo rm -rf /etc/apt/sources.list
 		sudo touch /etc/apt/sources.list
 		echo "deb http://http.kali.org/kali kali-rolling main non-free contrib
 deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/apt/sources.list 
 		cound_words=$(wc -l /etc/apt/sources.list | cut -d\  -f 1)
 		sleep 1
-		echo -e $BLUE"Added ${RED}$cound_words ${BLUE}lines to sources list."
+		echo -e $BLUE"Added ${RED}$cound_words ${BLUE}lines to the sources.list file."
 		clear
-		pause 'Press [Enter] to continue....'
+		pause 'Press [Enter] to continue...'
 		echo -e $BOLD ""
 		echo -e $YELLOW ""
 		clear
-		read -p "[*] Do you want to see the added lines[y/N]? " sl
+		read -p "[*] Do you want to see the new added lines[y/N]? " sl
 		if [[ $sl == "y" || $sl == "Y" ]]
 		then
 			cd lib
@@ -305,6 +306,26 @@ deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/ap
 		echo -e "${GREEN}[i] ${BLUE}Done."
 		pause 'Press [Enter] go back to menu'
 		full_config
+	}
+
+	drivers(){
+
+read -p "[*] Do you want install certain drivers (nexten, realtek, misc-nonfree)[y/N]?: " drv
+		if [[ $drv == "y" || $drv == "Y" ]]
+		then
+			clear
+			echo -e "[~] ${GREEN}Installing new driver packages, get something to drink and relax.."
+			sleep 0.5
+		    apt-get install firmware-misc-nonfree firmware-netxen firmware-realtek
+			cd lib
+		    sudo cp -R *.bin /lib/firmware/i915
+			clear
+			echo -e $GREEN "[✓] ${CYAN}Packages has been successfully installed."
+			echo -e "${GREEN}[i] ${BLUE}Done."
+			pause 'Press [Enter] back to the menu'
+			sleep 0.7
+			Aonfig
+		fi
 	}
 
 	packages(){
@@ -337,7 +358,7 @@ deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/ap
 			clear
 			echo -e "[~] ${GREEN}Installing new packages, get something to drink and relax.."
 			sleep 0.5
-			apt install neofetch lynx xpdf speedtest-cli firmware-misc-nonfree firmware-netxen firmware-realtek python3 tor tor-arm torbrowser-launcher proxychains proxychains4 filezilla gdebi geany neofetch git bettercap ngrep curl mdk3 mdk4 bc cowpatty php-cgi php apache2 libssl-dev gpa gnupg2 net-tools wget postfix libncurses5 libxml2 tcpdump libexiv2-dev build-essential python-pip ssh ssh-tools htop stacer bleachbit leafpad snapd yersinia cmake make g++ gcc openssh-server openssl screen wapiti whatweb nmap wget uniscan wafw00f dirb davtest theharvester xsser dnsrecon fierce dnswalk whois sslyze lbd dnsenum dmitry davtest nikto dnsmap netcat gvfs gvfs-common gvfs-daemons gvfs-libs gconf-service gconf2 gconf2-common gvfs-bin psmisc filezilla filezilla-common gdebi vlc firmware-misc-nonfree firmware-netxen firmware-realtek apktool maven default-jdk default-jre openjdk-8-jdk libncurses5-dev lib32z1 lib32ncurses6 -y
+			apt-get install neofetch lynx xpdf speedtest-cli python3 tor tor-arm torbrowser-launcher proxychains proxychains4 filezilla gdebi geany neofetch git bettercap ngrep curl mdk3 mdk4 bc cowpatty php-cgi php apache2 libssl-dev gpa gnupg2 net-tools wget postfix libncurses5 libxml2 tcpdump libexiv2-dev build-essential python-pip ssh ssh-tools htop stacer bleachbit leafpad snapd yersinia cmake make g++ gcc openssh-server openssl screen wapiti whatweb nmap wget uniscan wafw00f dirb davtest theharvester xsser dnsrecon fierce dnswalk whois sslyze lbd dnsenum dmitry davtest nikto dnsmap netcat gvfs gvfs-common gvfs-daemons gvfs-libs gconf-service gconf2 gconf2-common gvfs-bin psmisc filezilla filezilla-common gdebi vlc firmware-misc-nonfree firmware-netxen firmware-realtek apktool maven default-jdk default-jre openjdk-8-jdk libncurses5-dev lib32z1 lib32ncurses6 -y
 			sed -i s/geteuid/getppid/g /usr/bin/vlc
 			clear
 			echo -e $GREEN "[✓] ${CYAN}Packages has been successfully installed."
@@ -353,7 +374,7 @@ deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/ap
 		clear
 		echo ''
 		echo -e $BOLD "${BLUE}
-${BLUE}[i] ${RED}Kali linux has some metapackages, means it installs particular stuff you maybe need, i will list some options which you can choose to countinue.
+${BLUE}[i] ${RED}Kali linux has some metapackages, means it installs particular stuff you maybe need, i will list some options which you can choose to continue.
 
 ${BLUE}[1] ${RED}802-11 Tools		-:- ${YELLOW}Kali Linux 802.11 attacks tools
 ${BLUE}[2] ${RED}Bluetooth Tools 		-:- ${YELLOW}Kali Linux bluetooth attacks tools
@@ -549,9 +570,8 @@ $updd(){
 			echo -e "${RED}[*] ${YELLOW}Installing Tor Browser.."
 			sleep 1.5
 			clear
-			echo -e "${RED}[✓] ${GREEN}Repositories already exists in file."
 			echo -e "${RED}[*] ${YELLOW}Adding key."
-			wget -O- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | sudo apt-key add -
+			wget -O- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | sudo apt-key add - 2&>$atph/logs/torbrowrepo-add.log
 			echo -e "${RED}[*] ${YELLOW}Updating & Configurate changes."
 			apt update
 			apt-get install tor torbrowser-launcher deb.torproject.org-keyring -y
@@ -562,7 +582,7 @@ $updd(){
 			if [[ $str == "y" || $str == "Y" ]]
 			then
 				cd /root/Downloads
-				curl -LO https://dist.torproject.org/torbrowser/9.0.5/tor-browser-linux32-9.0.5_en-US.tar.xz
+				curl -LO https://www.torproject.org/dist/torbrowser/10.0.5/tor-browser-linux32-10.0.5_en-US.tar.xz
 				tar -xvf tor-browser-linux32-9.0.5_en-US.tar.xz
 				cd tor-browser_en-US
 				chmod +rwx start-tor-browser.desktop
@@ -603,15 +623,15 @@ $updd(){
 		clear
 		echo -e "${YELLOW}[*] ${BLUE}Adding secure DNS server in /etc/resolv.conf."
 		clear 
-		echo -e "${RED}[*] ${YELLOW}Listing your currently dns server:(ignoring comments)"
+		echo -e "${RED}[*] ${YELLOW}Listening your currently dns server:(ignoring comments)"
 		cat /etc/resolv.conf | sed '/#/d'
 		sleep 1
 		read -p "[?] Backup resolv.conf file[Y/N]?: " bck
 		if [[ $bck == "y" || $bck == "Y" ]]
 		then
-			echo -e "${BLUE}[*] ${GREEN}Backuping original file..."
+			echo -e "${BLUE}[*] ${GREEN}Backup original file..."
 			sleep 0.2
-			cp -R /etc/resolv.conf $path/backup
+			cp -R /etc/resolv.conf $path/backup 2&>$path/logs/log-cp-resolv.log
 
 		else
 			echo -e "${GREEN}[~] ${RED}Skipping.."
@@ -624,10 +644,10 @@ $updd(){
 			sleep 0.5
 			clear
 			echo -e "${GREEN}[~] ${RED}Skipping..."
-			pause 'Press [Enter] to continue....'
+			pause 'Press [Enter] to continue'
 			clear
 		fi
-		pause 'Press [Enter] to continue..'
+		pause 'Press [Enter] to continue'
 		sleep 0.5
 		clear
 		printf "${MAGENTA}[*] ${GREEN}(A)nonymous DNS, (F)ast DNS or (Q)uit(skip)[A/F/Q]?: "
@@ -670,6 +690,36 @@ $updd(){
 			full_config
 		fi
 	}
+	sources.bk(){
+		clear
+		echo -e "${YELLOW}[*] ${BLUE}Setup Repository : "/etc/apt/sources.list."
+		clear 
+		echo -e "${RED}[*] ${YELLOW}Printing current sources.list file..:"
+		cat /etc/apt/sources.list | sed '/#/d'
+		sleep 1
+		read -p "[?] Backup sources.list file[Y/N]?: " bck
+		if [[ $bck == "y" || $bck == "Y" ]]
+		then
+			echo -e "${BLUE}[*] ${GREEN}Backup original file..."
+			sleep 0.2
+			cp -R /etc/apt/sources.list $path/backup 2&>$path/logs/copy-sources.log
+
+		else
+			echo -e "${GREEN}[~] ${RED}Skipping.."
+			sleep 0.5
+			clear
+			echo -e "${GREEN}[~] ${RED}Skipping...."
+			sleep 0.5
+			clear
+			echo -e "${GREEN}[~] ${RED}Skipping."
+			sleep 0.5
+			clear
+			echo -e "${GREEN}[~] ${RED}Skipping..."
+			pause 'Press [Enter] to continue'
+			clear
+		fi
+	}
+
 
 	password(){
 		clear
@@ -1557,6 +1607,7 @@ echo ""
 echo -e $RED"Version		: $version"
 echo -e $GREEN"Tools		: 59"
 echo -e $MAGENTA"Creator		: MrBlackX"
+echo -e $MAGENTA"Contributer	: 0n1cOn3"
 echo -e $BLUE"Telegram 	: @TheMasterCH"
 echo ""
 command_check
