@@ -368,14 +368,13 @@ read -p "[*] Do you want install certain drivers (nexten, realtek, misc-nonfree)
 		fi
 	}
 
-	kali_pack(){
+kali_pack(){
 		echo -e $BOLD "${YELLOW}"
 		figlet -f slant "KaliTools"
 		clear
 		echo ''
 		echo -e $BOLD "${BLUE}
 ${BLUE}[i] ${RED}Kali linux has some metapackages, means it installs particular stuff you maybe need, i will list some options which you can choose to continue.
-
 ${BLUE}[1] ${RED}802-11 Tools		-:- ${YELLOW}Kali Linux 802.11 attacks tools
 ${BLUE}[2] ${RED}Bluetooth Tools 		-:- ${YELLOW}Kali Linux bluetooth attacks tools
 ${BLUE}[3] ${RED}Crypt & Stego Tools		-:- ${YELLOW}Kali Linux Cryptography and Steganography tools
@@ -412,120 +411,35 @@ ${BLUE}[q] ${RED}Quit the module
 			echo -ne "${RED}【 mak3r@root 】${YELLOW}/full_config/packages ${BLUE}~>: "
 			read kali
 			case "$kali" in
-				1)
-				apt install kali-tools-802-11 -y
-				txt=1
-				;;
-				2)
-				apt install kali-tools-bluetooth -y
-				txt=1
-				;;
-				3)
-				apt install kali-tools-crypto-stego -y
-				txt=1
-				;;
-				4)
-				apt install kali-tools-database -y 
-				txt=1
-				;;
-				5)
-				apt install kali-tools-exploitation -y 
-				txt=1
-				;;
-				6)
-				apt install kali-tools-forensics -y 
-				txt=1
-				;;
-				7)
-				apt install kali-tools-fuzzing -y
-				txt=1
-				;;
-				8)
-				apt install kali-tools-gpu -y
-				txt=1
-				;;
-				9)
-				apt install kali-tools-hardware -y
-				txt=1
-				;;
-				10)
-				apt install kali-tools-headless -y
-				txt=1
-				;;
-				11)
-				apt install kali-tools-information-gathering -y
-				txt=1
-				;;
-				12)
-				apt install kali-tools-passwords -y
-				txt=1
-				;;
-				13)
-				apt install kali-tools-post-exploitation -y
-				txt=1
-				;;
-				14)
-				apt install kali-tools-reporting -y
-				txt=1
-				;;
-				15)
-				apt install kali-tools-reverse-engineering -y
-				txt=1
-				;;
-				16)
-				apt install kali-tools-rfid -y
-				txt=1
-				;;
-				17)
-				apt install kali-tools-sdr -y
-				txt=1
-				;;
-				18)
-				apt install kali-tools-sniffing-spoofing -y
-				txt=1
-				;;
-				19)
-				apt install kali-tools-social-engineering -y
-				txt=1
-				;;
-				20)
-				apt install kali-tools-top10 -y
-				txt=1
-				;;
-				21)
-				apt install kali-tools-voip -y
-				txt=1
-				;;
-				22)
-				apt install kali-tools-vulnerability -y
-				txt=1
-				;;
-				23)
-				apt install kali-tools-web -y
-				txt=1
-				;;
-				24)
-				apt install kali-tools-windows-resources
-				txt=1
-				;;
-				25)
-				apt install kali-tools-wireless -y
-				txt=1
-				;;
-				all)
-				apt install kali-tools-802-11 kali-tools-bluetooth kali-tools-crypto-stego kali-tools-database kali-tools-exploitation kali-tools-forensics kali-tools-fuzzing kali-tools-gpu kali-tools-hardware kali-tools-headless kali-tools-information-gathering kali-tools-passwords  kali-tools-post-exploitation kali-tools-reporting kali-tools-reverse-engineering kali-tools-rfid kali-tools-sdr kali-tools-sniffing-spoofing kali-tools-social-engineering kali-tools-top10 kali-tools-voip kali-tools-vulnerability kali-tools-web kali-tools-windows-resources kali-tools-wireless -y
-				txt=1
-				;;
-				c)
-				txt=1
-				;;
-				back)
-				full_config
-				txt=1
-				;;
-				q)
-				txt=1
-				;;
+				1) apt install kali-tools-802-11 -y; txt=1;;
+				2) apt install kali-tools-bluetooth -y; txt=1;;
+				3) apt install kali-tools-crypto-stego -y; txt=1;;
+				4) apt install kali-tools-database -y; txt=1;;
+				5) apt install kali-tools-exploitation -y; txt=1;;
+				6) apt install kali-tools-forensics -y; txt=1;;
+				7) apt install kali-tools-fuzzing -y; txt=1;;
+				8) apt install kali-tools-gpu -y; txt=1;;
+				9) apt install kali-tools-hardware -y; txt=1;;
+				10)	apt install kali-tools-headless -y; txt=1;;
+				11) apt install kali-tools-information-gathering -y; txt=1;;
+				12) apt install kali-tools-passwords -y; txt=1;;
+				13) apt install kali-tools-post-exploitation -y; txt=1;;
+				14) apt install kali-tools-reporting -y; txt=1;;
+				15)	apt install kali-tools-reverse-engineering -y; txt=1;;
+				16) apt install kali-tools-rfid -y; txt=1;;
+				17) apt install kali-tools-sdr -y; txt=1;;
+				18) apt install kali-tools-sniffing-spoofing -y; txt=1;;
+				19) apt install kali-tools-social-engineering -y; txt=1;;
+				20) apt install kali-tools-top10 -y; txt=1;;
+				21) apt install kali-tools-voip -y; txt=1;;
+				22) apt install kali-tools-vulnerability -y; txt=1;;
+				23) apt install kali-tools-web -y; txt=1;;
+				24)	apt install kali-tools-windows-resources; txt=1;;
+				25)	apt install kali-tools-wireless -y; txt=1;;
+				all) apt install kali-tools-802-11 kali-tools-bluetooth kali-tools-crypto-stego kali-tools-database kali-tools-exploitation kali-tools-forensics kali-tools-fuzzing kali-tools-gpu kali-tools-hardware kali-tools-headless kali-tools-information-gathering kali-tools-passwords  kali-tools-post-exploitation kali-tools-reporting kali-tools-reverse-engineering kali-tools-rfid kali-tools-sdr kali-tools-sniffing-spoofing kali-tools-social-engineering kali-tools-top10 kali-tools-voip kali-tools-vulnerability kali-tools-web kali-tools-windows-resources kali-tools-wireless -y; txt=1;;
+				c) txt=1;;
+				back) full_config; txt=1;;
+				q) txt=1;;
 			esac
 		done
 	}
