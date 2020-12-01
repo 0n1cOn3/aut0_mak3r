@@ -33,6 +33,16 @@
  
  ## Already leaked:
   
+  **Version 0.3c-Beta 1**
+  * Code improvments
+  * Bug fixing
+  * Grammar fixes
+  * UI Design improvement
+  * instead removing sources.list first, added backup for restore your previous sources.list
+  * Upgraded Tor Browser Repo from 9.0.5 to version 10.0.5
+  * Seperated Driver installation
+  * Error Log Feature added
+
   **Version 0.3**
   * Added A Submenu For ```full_config``` Module
   * Fixed Some Termux Commands
@@ -103,7 +113,7 @@ _Channels :_
          
 [Deepwaterleaks](https://t.me/deepwaterleaks2)
                
-_Helpers  :_
+_Contributers & Supporters  :_
 
 
 BlackFlare
@@ -112,8 +122,10 @@ Legend
 
 MarCus
 
+[0n1cOn3](https://github.com/0n1cOn3)
 
-_Coder & Contact :_
+
+_Developer & Contact :_
   
 [mrblackx2_0](t.me/mrblackx2_0)
                 
