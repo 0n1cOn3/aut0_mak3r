@@ -1,0 +1,20 @@
+deb http://security.ubuntu.com/ubuntu focal-security restricted main
+# deb-src http://security.ubuntu.com/ubuntu focal-security restricted main
+deb http://security.ubuntu.com/ubuntu focal-security universe
+# deb-src http://security.ubuntu.com/ubuntu focal-security universe
+deb http://security.ubuntu.com/ubuntu focal-security multiverse
+# deb-src http://security.ubuntu.com/ubuntu focal-security multiverse
+deb http://archive.ubuntu.com/ubuntu focal restricted main multiverse universe
+# deb-src http://archive.ubuntu.com/ubuntu focal restricted main multiverse universe
+deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+deb http://mirrors.lug.mtu.edu/ubuntu focal main
+# deb-src http://mirrors.lug.mtu.edu/ubuntu focal main
+deb http://mirrors.edge.kernel.org/ubuntu focal main
+# deb-src http://mirrors.edge.kernel.org/ubuntu focal main
+deb http://ubuntu.mirrors.tds.net/ubuntu focal main
+# deb-src http://ubuntu.mirrors.tds.net/ubuntu focal main

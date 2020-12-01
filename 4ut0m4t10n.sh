@@ -221,16 +221,17 @@ full_config(){
 	echo -e "
 
 ${RED}[1] ${YELLOW}Edit Sources
-${RED}[2] ${YELLOW}Package installation
-${RED}[3] ${YELLOW}Kali Packages
-${RED}[4] ${YELLOW}Custom Update
-${RED}[5] ${YELLOW}Install Tor Browser
-${RED}[6] ${YELLOW}Change DNS
-${RED}[7] ${YELLOW}Generate Strong Password
-${RED}[8] ${YELLOW}Setup OpenVPN account
-${RED}[9] ${YELLOW}Install Editor
-${RED}[10] ${YELLOW}Install Burner
-${RED}[11] ${YELLOW}Check Internet Connection
+${RED}[2] ${YELLOW}Restore Sources
+${RED}[3] ${YELLOW}Package installation
+${RED}[4] ${YELLOW}Kali Packages
+${RED}[5] ${YELLOW}Custom Update
+${RED}[6] ${YELLOW}Install Tor Browser
+${RED}[7] ${YELLOW}Change DNS
+${RED}[8] ${YELLOW}Generate Strong Password
+${RED}[9] ${YELLOW}Setup OpenVPN account
+${RED}[10] ${YELLOW}Install Editor
+${RED}[11] ${YELLOW}Install Burner
+${RED}[12] ${YELLOW}Check Internet Connection
 
 ${RED}[back] ${YELLOW}Back To Main Menu
 	"
@@ -271,7 +272,7 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 		clear	
 		echo -e "${CYAN}[!] Configuring your source list..."
 		sleep 0.7
-		sources.bk
+		sourcesbk
 		sudo rm -rf /etc/apt/sources.list
 		sudo touch /etc/apt/sources.list
 		echo "deb http://http.kali.org/kali kali-rolling main non-free contrib
@@ -442,7 +443,6 @@ ${BLUE}[q] ${RED}Quit the module
 				q) txt=1;;
 			esac
 		done
-	}
 
 	update(){
 		clear
@@ -451,7 +451,7 @@ ${BLUE}[q] ${RED}Quit the module
 		read updd
 		echo "
 $updd(){
-
+	echo "
 	apt-get update &&
 	apt-get dist-upgrade -y &&
 	apt-get autoremove -y &&
@@ -537,7 +537,7 @@ $updd(){
 		clear
 		echo -e "${YELLOW}[*] ${BLUE}Adding secure DNS server in /etc/resolv.conf."
 		clear 
-		echo -e "${RED}[*] ${YELLOW}Listening your currently dns server:(ignoring comments)"
+		echo -e "${RED}[*] ${YELLOW}Listening your currently dns server:"(ignoring comments)"""
 		cat /etc/resolv.conf | sed '/#/d'
 		sleep 1
 		read -p "[?] Backup resolv.conf file[Y/N]?: " bck
@@ -604,15 +604,15 @@ $updd(){
 			full_config
 		fi
 	}
-	sources.bk(){
-		clear
-		echo -e "${YELLOW}[*] ${BLUE}Setup Repository : "/etc/apt/sources.list."
-		clear 
-		echo -e "${RED}[*] ${YELLOW}Printing current sources.list file..:"
-		cat /etc/apt/sources.list | sed '/#/d'
-		sleep 1
-		read -p "[?] Backup sources.list file[Y/N]?: " bck
-		if [[ $bck == "y" || $bck == "Y" ]]
+	sourcesbk(){
+			clear
+			echo -e "${YELLOW}[*] ${BLUE}Setup Repository : /etc/apt/sources.list."
+			clear 
+			echo -e "${RED}[*] ${YELLOW}Printing current sources.list file..:"
+			cat /etc/apt/sources.list | sed '/#/d'
+			sleep 1
+			read -p "[?] Backup sources.list file[Y/N]?: " bck
+			if [[ $bck == "y" || $bck == "Y" ]]
 		then
 			echo -e "${BLUE}[*] ${GREEN}Backup original file..."
 			sleep 0.2
@@ -669,7 +669,7 @@ $updd(){
 					wget https://freevpnme.b-cdn.net/FreeVPN.me-OpenVPN-Bundle-January-2020.zip
 					unzip FreeVPN.me-OpenVPN-Bundle-January-2020.zip
 					rm FreeVPN.me-OpenVPN-Bundle-January-2020.zip
-					find -iname \*.* | rename -v "s/ /-/g" 2>/dev/null
+					find -iname \. | rename -v "s/ /-/g" 2>/dev/null
 					xterm -e bash openvpn.sh
 				else
 					mkdir openvpn
@@ -677,7 +677,7 @@ $updd(){
 					wget https://freevpnme.b-cdn.net/FreeVPN.me-OpenVPN-Bundle-January-2020.zip
 					unzip FreeVPN.me-OpenVPN-Bundle-January-2020.zip
 					rm FreeVPN.me-OpenVPN-Bundle-January-2020.zip
-					find -iname \*.* | rename -v "s/ /-/g" 2>/dev/null
+					find -iname \. | rename -v "s/ /-/g" 2>/dev/null
 					xterm -e bash openvpn.sh
 				fi
 			fi
@@ -707,9 +707,8 @@ $updd(){
 - -	(b)luefish 	- -
 
 - - 	(s)kip 		- -
-
-${RED}Type the letter in () in lowercase f.e: a for atom.			
-		"
+"
+		echo -e "${RED}Type the letter in () in lowercase f.e: a for atom."			
 			echo -ne "${GREEN}[?] Which linux code editor you would use?: "
 			read name
 			case "$name" in
@@ -992,8 +991,15 @@ ${BLUE}[5] ${MAGENTA}DDoS Tools
 		echo ""
 		}
 	
-	function bombtool {
-		echo ""
+		function bombtool {
+				echo -e "${RED}[*] ${YELLOW}SMS Bomb installation...."
+				cd $HOME
+				git clone https://github.com/TheSpeedX/TBomb.git
+				cd DDoS_DownloaderTBomb
+				chmod +rwx *sh
+				echo -e "${RED}[*] ${YELLOW}Done, installed in ${BLUE}$path ${YELLOW}to run type: ${GREEN}bash TBomb.sh"
+				sleep 1
+				pause 'Press [ENTER] to go back.'
 		}
 
 	#this tools are coming soon.
@@ -1407,7 +1413,7 @@ ${RED}[menu] ${YELLOW}Back To Main Menu
 }
 
 function custom_term {
-	echo -e "${RED}[*] ${YELLOW}Customizing your terminal in thoughts to mrblackx..."
+	echo -e "${RED}[*] ${YELLOW}Customize your terminal with mrblackx..."
 	sleep 1
 	echo -ne "${YELLOW}[>] ${RED}Enter your name:${BLUE} "
 	read name
