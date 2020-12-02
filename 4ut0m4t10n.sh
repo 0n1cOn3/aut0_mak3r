@@ -91,7 +91,7 @@ package_installer() {
 	sleep 0.5
 	if ! hash tilix 2>/dev/null;then
 		echo -e $RED "Not installed [✗]"
-		apt install tilix -y
+		apt install tilix -y 2&>${path}/logs/apt/tilix.log
 	else
 		echo -e $GREEN "Installed [✓]"
 	fi	
@@ -101,7 +101,7 @@ package_installer() {
 	sleep 0.5
 	if ! hash python 2>/dev/null;then
 		echo -e $RED "Not installed [✗]"
-		apt install python -y
+		apt install python -y 2&>${path}/logs/apt/python.log
 	else
 		echo -e $GREEN "Installed [✓]"
 	fi
@@ -111,7 +111,7 @@ package_installer() {
 	sleep 0.5
 	if ! hash nano 2>/dev/null;then
 		echo -e $RED "Not installed [✗]"
-		apt install nano -y
+		apt install nano -y 2&>${path}/logs/apt/nano.log
 	else
 		echo -e $GREEN "Installed [✓]"
 	fi
@@ -121,7 +121,7 @@ package_installer() {
 	sleep 0.5
 	if ! hash figlet 2>/dev/null;then
 		echo -e $RED "Not installed [✗]"
-		apt install figlet -y
+		apt install figlet -y 2&>${path}/logs/apt/figlet.log
 	else
 		echo -e $GREEN "Installed [✓]"
 	fi
@@ -131,7 +131,7 @@ package_installer() {
 	sleep 0.5
 	if ! hash speedtest 2>/dev/null;then
 		echo -e $RED "Not installed [✗]"
-		apt install speedtest -y
+		apt install speedtest-cli speedtest -y 2&>${path}/logs/speedtest-cli.log
 	else
 		echo -e $GREEN "Installed [✓]"
 	fi
@@ -203,11 +203,6 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 	"
 
 	sources(){
-		cd lib
-		sudo cp -R *.bin /lib/firmware/i915
-		chmod a+x *.sh
-		chmod a+x proxy.py
-		cd ..
 		cd openvpn
 		chmod a+x openvpn.sh
 		cd ..
@@ -258,7 +253,7 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 		clear
 		echo -e $BOLD ""
 		echo -e $RED"[!] Importing kali.org archive key:"
-		wget -q -O - https://www.kali.org/archive-key.asc | sudo apt-key add -
+		wget -q -O - https://www.kali.org/archive-key.asc | sudo apt-key add - 2&>${path}/logs/apt/importkey.log
 		sleep 2
 		echo -e "${GREEN}[i] ${BLUE}Done."
 		pause 'Press [Enter] go back to menu'
