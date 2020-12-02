@@ -12,6 +12,7 @@ ipaddr="$(curl -s ifconfig.me)"
 ipaddr2="$(curl -s icanhazip.com)"
 host="$(uname -n)"
 version="0.3d-beta1"
+l="."
 
 #some colors
 RED="\e[31m"
@@ -30,7 +31,7 @@ NORMAL="\e[0m"
 # Functions
 
 update(){
-	up=$(git pull &>/dev/null)
+	#up=$(git pull &>/dev/null)
 	echo -e "${MAGENTA}[*] ${BLUE}Check if you up-to-date..."
 	echo ""
 	sleep 0.5
@@ -38,7 +39,7 @@ update(){
 	then
 		echo -e "${GREEN}[i] ${BLUE}Already on the latest version :-)"
 	else
-		git pull -q &>/dev/null
+		#git pull -q &>/dev/null
 		echo -e "${MAGENTA}[*] ${BLUE}Tool is updated to version $version."
 	fi
 
@@ -54,8 +55,12 @@ main() {
 		tmaker
 	fi
 }
-
-
+run(){
+	for i in {1..3}
+	do
+		echo -ne "${l:0:$i}";sleep 0.8
+	done
+}
 err_report() {
 		if exit[1]
 		then
@@ -177,13 +182,6 @@ pause() {
 }
 
 full_config(){
-	l="."
-	run(){
-	for i in {1..3}
-	do
-		echo -ne "${l:0:$i}";sleep 0.8
-	done
-	}
 	clear
 	figlet -f slant "FullConfig"
 	echo -e "
@@ -227,10 +225,10 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 		sleep 1.5
 		pause 'Press [Enter] to Start'
 		clear
-		echo -ne $YELLOW"[!] Starting package checking dependencies";run;print " \n\n"
+		echo -ne $YELLOW"[!] Starting package checking dependencies";run;printf "\n\n"
 		sleep 0.5
 		package_installer
-		echo -ne "${CYAN}[!] Configuring your source list"; run;print " \n\n"
+		echo -ne "${CYAN}[!] Configuring your source list"; run;printf "\n\n"
 		sleep 0.7
 		sudo mv /etc/apt/sources.list backup/
 		sudo touch /etc/apt/sources.list
@@ -254,7 +252,7 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 			cd ..
 		else
 			echo ""
-			echo -ne "${RED}[skiping] ${YELLOW}Ignoring new entries at ${RED}/etc/apt/sources.list";run;print " \n\n"
+			echo -ne "${RED}[skiping] ${YELLOW}Ignoring new entries at ${RED}/etc/apt/sources.list";run;printf "\n\n"
 			sleep 1
 		fi
 		clear
@@ -365,7 +363,7 @@ ${BLUE}[q] ${RED}Quit the module
 		txt=0
 		while [ $txt = 0 ] 
 		do
-			echo -ne "${RED}【 mak3r@root 】${YELLOW}/full_config/packages ${BLUE}~>: "
+			echo -ne "${RED}【 mak3r@github 】${YELLOW}/full_config/packages ${BLUE}~>: "
 			read kali
 			case "$kali" in
 				1) sudo apt install kali-tools-802-11 -y; txt=1;;
@@ -429,7 +427,7 @@ ${updd}(){
 		read tr
 		if [[ $tr == "y" || $tr == "Y" ]]
 		then
-			echo -ne "${RED}[*] ${YELLOW}Installing Tor Browser..";run;print " \n\n"
+			echo -ne "${RED}[*] ${YELLOW}Installing Tor Browser..";run;printf "\n\n"
 			sleep 1.5
 			clear
 			echo -e "${RED}[*] ${YELLOW}Adding key."
@@ -450,7 +448,7 @@ ${updd}(){
 				full_config
 			fi
 		else
-			echo -ne "${GREEN}[~] ${RED}Skipping..";run;print " \n\n"
+			echo -ne "${GREEN}[~] ${RED}Skipping..";run;printf "\n\n"
 			pause 'Press [Enter] to continue....'
 			clear
 			echo -e "${GREEN}[i] ${BLUE}Done."
@@ -475,7 +473,7 @@ ${updd}(){
 			cp -R /etc/resolv.conf $path/backup 2&>${path}/logs/log-cp-resolv.log
 
 		else
-			echo -e "${GREEN}[~] ${RED}Skipping";run;print " \n\n"
+			echo -e "${GREEN}[~] ${RED}Skipping";run;printf "\n\n"
 			pause 'Press [Enter] to continue'
 			clear
 		fi
@@ -537,7 +535,7 @@ ${updd}(){
 			cp -R /etc/apt/sources.list $path/backup 2&>$path/logs/copy-sources.log
 
 		else
-			echo -e "${GREEN}[~] ${RED}Skipping";run;print " \n\n";sleep 0.5
+			echo -e "${GREEN}[~] ${RED}Skipping";run;printf "\n\n";sleep 0.5
 			pause 'Press [Enter] to continue'
 			clear
 		fi
@@ -730,7 +728,7 @@ ${updd}(){
 	fc=0
 	while [ $fc = 0 ]
 	do
-		echo -ne "${BLUE}【 mak3r@root 】${YELLOW}/full_config ${BLUE}~>:${RED} "
+		echo -ne "${BLUE}【 mak3r@github 】${YELLOW}/full_config ${BLUE}~>:${RED} "
 		read f
 		case "$f" in
 			1) sources; fc=1;;
@@ -786,7 +784,7 @@ ${BLUE}[5] ${MAGENTA}DDoS Tools
 		
 		"
 		
-		printf "${RED}【 mak3r@root 】 ${YELLOW}/install_tools/information_gathering/${BLUE}~>: "
+		printf "${RED}【 mak3r@github 】 ${YELLOW}/install_tools/information_gathering/${BLUE}~>: "
 		read inf
 		
 		fbi() {
@@ -918,7 +916,7 @@ ${RED}More Coming Soon :)
 	"
 	
 	
-	printf "${RED}【 mak3r@root 】 ${YELLOW}/misc ${BLUE}~>: "
+	printf "${RED}【 mak3r@github 】 ${YELLOW}/misc ${BLUE}~>: "
 	read sm
 	if [[ $sm == 1 ]]
 	then
@@ -1316,7 +1314,7 @@ quit() {
 	clear
 	echo -e "${RED}[*] ${YELLOW} Pre-setting options."
 	pause 'Press [Enter] to continue'
-	echo -e "${RED}[*] ${CYAN}Quitting";run;printf "\n\n";sleep 0.5
+	echo -ne "${RED}[*] ${CYAN}Quitting";run;printf "\n\n";sleep 0.5
 	sleep 0.5
 	clear
 	exit
@@ -1391,14 +1389,12 @@ echo ""
 echo ""
 echo -e $BLUE ""
 
-
-
 #main 
 
 x=0
 while [ $x = 0 ]
 do
-	echo -ne "【 mak3r@root 】~>:${RED} "
+	echo -ne "【 mak3r@github 】~>:${RED} "
 	read ex
 	case "$ex" in
 		full_config) full_config; x=1;;
