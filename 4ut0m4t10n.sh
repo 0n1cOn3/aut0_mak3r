@@ -1,14 +1,9 @@
 #!/bin/bash
 
-#################################################
-#						#  
-#       AUTHOR : THEMASTERCH | MRBLACKX		#
-#						#
-# 	TOOL : FOR CONFIGURATION LINUX		#
-#						#
-#	TIME : MORE THAN 5 MONTHS		#
-#						#
-#################################################
+# __author__      : mrblackx
+# __description__ : configuration tool
+# __time__        : 5 months
+# __version__     : v0.3d-beta1
 
 
 path=$(pwd)
@@ -30,7 +25,7 @@ BOLD="\e[1m"
 NORMAL="\e[0m"
 
 
-printf '\e[8;37;100t'
+#printf '\e[8;37;100t'
 
 # Functions
 
@@ -49,7 +44,7 @@ update(){
 
 }
 
-function main {
+main() {
 	o="$(uname -o)"
 	if [ $o == "Android" ]
 	then
@@ -60,42 +55,8 @@ function main {
 	fi
 }
 
-function brackets {
-	curl -LO https://github.com/adobe/brackets/releases/download/release-1.14.1/Brackets.Release.1.14.1.64-bit.deb
-	apt install ./Brackets.Release.1.14.1.64-bit.deb
-	mv -v Brackets.Release.1.14.1.64-bit.deb /tmp
-	}
-function atom {
-	apt install snapd -y
-	apt update
-	systemctl start snapd.service
-	snap install atom --classic
-	echo "[*] Atom has been successfully installed."
-	sleep 1
-	}
-function visualcode {
-	apt install snapd -y
-	apt update
-	systemctl start snapd.service
-	snap install --classic code
-	echo "[*] Visual Code Studio has been successfully installed."
-	sleep 1
-	}
-function bluefish {
-	apt-get install bluefish -y
-	echo "[*] Bluefish editor has been successfully installed."
-	}
 
-function geany {
-	apt-get install geany -y
-	echo "[*] Geany editor has been installed."
-	}
-
-
-
-
-
-function err_report {
+err_report() {
 		if exit[1]
 		then
 			echo -e $RED "Please report all errors to: ${BLUE}https://github.com/ViperZCrew"
@@ -109,7 +70,7 @@ function err_report {
 		fi
 }
 
-function err_solver {
+err_solver() {
 	
 	clear
 	echo -e "${RED}[!] ${YELLOW}Wrong command..."
@@ -118,7 +79,7 @@ function err_solver {
 	bash 4ut0m4t10n.sh
 }
 
-function package_installer {
+package_installer() {
 	
 	echo -e $BOLD ""
 	echo -ne "${CYAN}Tilix... -> "
@@ -172,7 +133,7 @@ function package_installer {
 
 }	
 
-function command_check {
+command_check() {
 
 	echo -e "${RED}[*] ${YELLOW}Checking if tool callable..."
 	echo ""
@@ -211,11 +172,18 @@ function command_check {
 
 }
 
-function pause {
+pause() {
 	read -p "$*"
 }
 
 full_config(){
+	l="."
+	run(){
+	for i in {1..3}
+	do
+		echo -ne "${l:0:$i}";sleep 0.8
+	done
+	}
 	clear
 	figlet -f slant "FullConfig"
 	echo -e "
@@ -236,8 +204,6 @@ ${RED}[12] ${YELLOW}Check Internet Connection
 ${RED}[back] ${YELLOW}Back To Main Menu
 	"
 
-	# Function 
-	
 	sources(){
 		cd lib
 		sudo cp -R *.bin /lib/firmware/i915
@@ -261,22 +227,14 @@ ${RED}[back] ${YELLOW}Back To Main Menu
 		sleep 1.5
 		pause 'Press [Enter] to Start'
 		clear
-		echo -e $YELLOW"[!] Starting package checking dependencies.."
+		echo -ne $YELLOW"[!] Starting package checking dependencies";run;print " \n\n"
 		sleep 0.5
 		package_installer
-		echo -e "${CYAN}[!] Configuring your source list."
+		echo -ne "${CYAN}[!] Configuring your source list"; run;print " \n\n"
 		sleep 0.7
-		clear
-		echo -e "${CYAN}[!] Configuring your source list.."
-		sleep 0.7
-		clear	
-		echo -e "${CYAN}[!] Configuring your source list..."
-		sleep 0.7
-		sourcesbk
-		sudo rm -rf /etc/apt/sources.list
+		sudo mv /etc/apt/sources.list backup/
 		sudo touch /etc/apt/sources.list
-		echo "deb http://http.kali.org/kali kali-rolling main non-free contrib
-deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/apt/sources.list 
+		printf "deb http://http.kali.org/kali kali-rolling main non-free contrib\ndeb-src http://http.kali.org/kali kali-rolling main non-free contrib\n" >> /etc/apt/sources.list 
 		cound_words=$(wc -l /etc/apt/sources.list | cut -d\  -f 1)
 		sleep 1
 		echo -e $BLUE"Added ${RED}$cound_words ${BLUE}lines to the sources.list file."
@@ -296,7 +254,7 @@ deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/ap
 			cd ..
 		else
 			echo ""
-			echo -e "${RED}[skiping] ${YELLOW}Ignoring new entries at ${RED}/etc/apt/sources.list..."
+			echo -ne "${RED}[skiping] ${YELLOW}Ignoring new entries at ${RED}/etc/apt/sources.list";run;print " \n\n"
 			sleep 1
 		fi
 		clear
@@ -310,22 +268,20 @@ deb-src http://http.kali.org/kali kali-rolling main non-free contrib" >> /etc/ap
 	}
 
 	drivers(){
-
-read -p "[*] Do you want install certain drivers (nexten, realtek, misc-nonfree)[y/N]?: " drv
+		read -p "[*] Do you want install certain drivers (nexten, realtek, misc-nonfree)[y/N]?: " drv
 		if [[ $drv == "y" || $drv == "Y" ]]
 		then
 			clear
-			echo -e "[~] ${GREEN}Installing new driver packages, get something to drink and relax.."
+			echo -e "[~] ${GREEN}Installing new driver packages, get something to drink and relax."
 			sleep 0.5
-		    apt-get install firmware-misc-nonfree firmware-netxen firmware-realtek
-			cd lib
-		    sudo cp -R *.bin /lib/firmware/i915
+		    sudo apt-get install firmware-misc-nonfree firmware-netxen firmware-realtek -y
+			cd lib;sudo cp -R *.bin /lib/firmware/i915;cd ..
 			clear
 			echo -e $GREEN "[✓] ${CYAN}Packages has been successfully installed."
 			echo -e "${GREEN}[i] ${BLUE}Done."
 			pause 'Press [Enter] back to the menu'
 			sleep 0.7
-			Aonfig
+			full_config
 		fi
 	}
 
@@ -347,19 +303,19 @@ read -p "[*] Do you want install certain drivers (nexten, realtek, misc-nonfree)
 			echo -e "${GREEN}[*] Your kali version is:${RED} $vk${GREEN}."
 		else
 			echo -e "${GREEN}[✓] ${CYAN}Done!"
-			pause 'Press [Enter] to continue....'
+			pause 'Press [Enter] to continue'
 		fi
 		echo ""
-		dpkg --add-architecture i386
+		sudo dpkg --add-architecture i386
 		sleep 1
 		echo -e $MAGENTA ""
 		read -p "[*] Do you want install many packages[y/N]?: " pck
 		if [[ $pck == "y" || $pck == "Y" ]]
 		then
 			clear
-			echo -e "[~] ${GREEN}Installing new packages, get something to drink and relax.."
+			echo -e "[~] ${GREEN}Installing new packages, get something to drink and relax."
 			sleep 0.5
-			apt-get install neofetch lynx xpdf speedtest-cli python3 tor tor-arm torbrowser-launcher proxychains proxychains4 filezilla gdebi geany neofetch git bettercap ngrep curl mdk3 mdk4 bc cowpatty php-cgi php apache2 libssl-dev gpa gnupg2 net-tools wget postfix libncurses5 libxml2 tcpdump libexiv2-dev build-essential python-pip ssh ssh-tools htop stacer bleachbit leafpad snapd yersinia cmake make g++ gcc openssh-server openssl screen wapiti whatweb nmap wget uniscan wafw00f dirb davtest theharvester xsser dnsrecon fierce dnswalk whois sslyze lbd dnsenum dmitry davtest nikto dnsmap netcat gvfs gvfs-common gvfs-daemons gvfs-libs gconf-service gconf2 gconf2-common gvfs-bin psmisc filezilla filezilla-common gdebi vlc firmware-misc-nonfree firmware-netxen firmware-realtek apktool maven default-jdk default-jre openjdk-8-jdk libncurses5-dev lib32z1 lib32ncurses6 -y
+			sudo apt-get install neofetch lynx xpdf speedtest-cli python3 tor tor-arm torbrowser-launcher proxychains proxychains4 filezilla gdebi geany neofetch git bettercap ngrep curl mdk3 mdk4 bc cowpatty php-cgi php apache2 libssl-dev gpa gnupg2 net-tools wget postfix libncurses5 libxml2 tcpdump libexiv2-dev build-essential python-pip ssh ssh-tools htop stacer bleachbit leafpad snapd yersinia cmake make g++ gcc openssh-server openssl screen wapiti whatweb nmap wget uniscan wafw00f dirb davtest theharvester xsser dnsrecon fierce dnswalk whois sslyze lbd dnsenum dmitry davtest nikto dnsmap netcat gvfs gvfs-common gvfs-daemons gvfs-libs gconf-service gconf2 gconf2-common gvfs-bin psmisc filezilla filezilla-common gdebi vlc firmware-misc-nonfree firmware-netxen firmware-realtek apktool maven default-jdk default-jre openjdk-8-jdk libncurses5-dev lib32z1 lib32ncurses6 -y
 			sed -i s/geteuid/getppid/g /usr/bin/vlc
 			clear
 			echo -e $GREEN "[✓] ${CYAN}Packages has been successfully installed."
@@ -369,7 +325,7 @@ read -p "[*] Do you want install certain drivers (nexten, realtek, misc-nonfree)
 		fi
 	}
 
-kali_pack(){
+	kali_pack(){
 		echo -e $BOLD "${YELLOW}"
 		figlet -f slant "KaliTools"
 		clear
@@ -412,52 +368,53 @@ ${BLUE}[q] ${RED}Quit the module
 			echo -ne "${RED}【 mak3r@root 】${YELLOW}/full_config/packages ${BLUE}~>: "
 			read kali
 			case "$kali" in
-				1) apt install kali-tools-802-11 -y; txt=1;;
-				2) apt install kali-tools-bluetooth -y; txt=1;;
-				3) apt install kali-tools-crypto-stego -y; txt=1;;
-				4) apt install kali-tools-database -y; txt=1;;
-				5) apt install kali-tools-exploitation -y; txt=1;;
-				6) apt install kali-tools-forensics -y; txt=1;;
-				7) apt install kali-tools-fuzzing -y; txt=1;;
-				8) apt install kali-tools-gpu -y; txt=1;;
-				9) apt install kali-tools-hardware -y; txt=1;;
-				10)	apt install kali-tools-headless -y; txt=1;;
-				11) apt install kali-tools-information-gathering -y; txt=1;;
-				12) apt install kali-tools-passwords -y; txt=1;;
-				13) apt install kali-tools-post-exploitation -y; txt=1;;
-				14) apt install kali-tools-reporting -y; txt=1;;
-				15)	apt install kali-tools-reverse-engineering -y; txt=1;;
-				16) apt install kali-tools-rfid -y; txt=1;;
-				17) apt install kali-tools-sdr -y; txt=1;;
-				18) apt install kali-tools-sniffing-spoofing -y; txt=1;;
-				19) apt install kali-tools-social-engineering -y; txt=1;;
-				20) apt install kali-tools-top10 -y; txt=1;;
-				21) apt install kali-tools-voip -y; txt=1;;
-				22) apt install kali-tools-vulnerability -y; txt=1;;
-				23) apt install kali-tools-web -y; txt=1;;
-				24)	apt install kali-tools-windows-resources; txt=1;;
-				25)	apt install kali-tools-wireless -y; txt=1;;
-				all) apt install kali-tools-802-11 kali-tools-bluetooth kali-tools-crypto-stego kali-tools-database kali-tools-exploitation kali-tools-forensics kali-tools-fuzzing kali-tools-gpu kali-tools-hardware kali-tools-headless kali-tools-information-gathering kali-tools-passwords  kali-tools-post-exploitation kali-tools-reporting kali-tools-reverse-engineering kali-tools-rfid kali-tools-sdr kali-tools-sniffing-spoofing kali-tools-social-engineering kali-tools-top10 kali-tools-voip kali-tools-vulnerability kali-tools-web kali-tools-windows-resources kali-tools-wireless -y; txt=1;;
+				1) sudo apt install kali-tools-802-11 -y; txt=1;;
+				2) sudo apt install kali-tools-bluetooth -y; txt=1;;
+				3) sudo apt install kali-tools-crypto-stego -y; txt=1;;
+				4) sudo apt install kali-tools-database -y; txt=1;;
+				5) sudo apt install kali-tools-exploitation -y; txt=1;;
+				6) sudo apt install kali-tools-forensics -y; txt=1;;
+				7) sudo apt install kali-tools-fuzzing -y; txt=1;;
+				8) sudo apt install kali-tools-gpu -y; txt=1;;
+				9) sudo apt install kali-tools-hardware -y; txt=1;;
+				10)	sudo apt install kali-tools-headless -y; txt=1;;
+				11) sudo apt install kali-tools-information-gathering -y; txt=1;;
+				12) sudo apt install kali-tools-passwords -y; txt=1;;
+				13) sudo apt install kali-tools-post-exploitation -y; txt=1;;
+				14) sudo apt install kali-tools-reporting -y; txt=1;;
+				15)	sudo apt install kali-tools-reverse-engineering -y; txt=1;;
+				16) sudo apt install kali-tools-rfid -y; txt=1;;
+				17) sudo apt install kali-tools-sdr -y; txt=1;;
+				18) sudo apt install kali-tools-sniffing-spoofing -y; txt=1;;
+				19) sudo apt install kali-tools-social-engineering -y; txt=1;;
+				20) sudo apt install kali-tools-top10 -y; txt=1;;
+				21) sudo sudo apt install kali-tools-voip -y; txt=1;;
+				22) sudo apt install kali-tools-vulnerability -y; txt=1;;
+				23) sudo apt install kali-tools-web -y; txt=1;;
+				24)	sudo apt install kali-tools-windows-resources; txt=1;;
+				25)	sudo apt install kali-tools-wireless -y; txt=1;;
+				all) sudo apt install kali-tools-802-11 kali-tools-bluetooth kali-tools-crypto-stego kali-tools-database kali-tools-exploitation kali-tools-forensics kali-tools-fuzzing kali-tools-gpu kali-tools-hardware kali-tools-headless kali-tools-information-gathering kali-tools-passwords  kali-tools-post-exploitation kali-tools-reporting kali-tools-reverse-engineering kali-tools-rfid kali-tools-sdr kali-tools-sniffing-spoofing kali-tools-social-engineering kali-tools-top10 kali-tools-voip kali-tools-vulnerability kali-tools-web kali-tools-windows-resources kali-tools-wireless -y; txt=1;;
 				c) txt=1;;
 				back) full_config; txt=1;;
 				q) txt=1;;
 			esac
 		done
+	}
 
 	update(){
 		clear
 		echo ""
 		printf "${RED}[?] ${YELLOW}Name of command: "
 		read updd
-		echo "
-$updd(){
-	echo "
-	apt-get update &&
-	apt-get dist-upgrade -y &&
-	apt-get autoremove -y &&
-	apt-get autoclean &&
-	apt-get clean &&
-	}" >> /root/.bashrc
+		echo ""
+		echo -e "
+${updd}(){
+	sudo apt-get update &&
+	sudo apt-get dist-upgrade -y &&
+	sudo apt-get autoremove -y &&
+	sudo apt-get autoclean &&
+	sudo apt-get clean
+}		" >> ~/.bashrc
 		echo -e "${RED}[!] ${BLUE}Type ${RED}$updd ${BLUE}to make a full update for your kali linux."
 		echo -e "${MAGENTA}[!] ${RED}To see changes, close terminal and start terminal again!"
 		clear
@@ -472,58 +429,28 @@ $updd(){
 		read tr
 		if [[ $tr == "y" || $tr == "Y" ]]
 		then
-			echo -e "${RED}[*] ${YELLOW}Installing Tor Browser.."
-			sleep 0.5
-			clear
-			echo -e "${RED}[*] ${YELLOW}Installing Tor Browser..."
-			sleep 0.5
-			clear
-			echo -e "${RED}[*] ${YELLOW}Installing Tor Browser...."
-			sleep 0.5
-			clear
-			echo -e "${RED}[*] ${YELLOW}Installing Tor Browser.."
+			echo -ne "${RED}[*] ${YELLOW}Installing Tor Browser..";run;print " \n\n"
 			sleep 1.5
 			clear
 			echo -e "${RED}[*] ${YELLOW}Adding key."
 			wget -O- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | sudo apt-key add - 2&>$atph/logs/torbrowrepo-add.log
 			echo -e "${RED}[*] ${YELLOW}Updating & Configurate changes."
 			apt update
-			apt-get install tor torbrowser-launcher deb.torproject.org-keyring -y
+			apt-get install tor torbrowser-launcher -y
 			echo -e "${GREEN}[✓] ${CYAN}Done!."
-			pause 'Press [Enter] to continue....'
-			clear
+			pause 'Press [Enter] to continue'
 			read -p "Do you want to start tor browser[Y/N]? " str
 			if [[ $str == "y" || $str == "Y" ]]
 			then
-				cd /root/Downloads
-				curl -LO https://www.torproject.org/dist/torbrowser/10.0.5/tor-browser-linux32-10.0.5_en-US.tar.xz
-				tar -xvf tor-browser-linux32-9.0.5_en-US.tar.xz
-				cd tor-browser_en-US
-				chmod +rwx start-tor-browser.desktop
-				cd Browser
-				echo -e "${RED}[*] ${YELLOW}Remove line 94-98, save and exit it."
-				pause 'Press [ENTER] to edit the tor file.'
-				gedit start-tor-browser
-				./start-tor-browser
-				echo -e "${GREEN}[i] ${BLUE}Done."
+				torbrowser-launcher
 				pause 'Press [Enter] go back to menu'
 				full_config
 			else
-				echo -e "${GREEN}[i] ${BLUE}Done."
 				pause 'Press [Enter] go back to menu'
 				full_config
 			fi
 		else
-			echo -e "${GREEN}[~] ${RED}Skipping.."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping...."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping..."
+			echo -ne "${GREEN}[~] ${RED}Skipping..";run;print " \n\n"
 			pause 'Press [Enter] to continue....'
 			clear
 			echo -e "${GREEN}[i] ${BLUE}Done."
@@ -537,7 +464,7 @@ $updd(){
 		clear
 		echo -e "${YELLOW}[*] ${BLUE}Adding secure DNS server in /etc/resolv.conf."
 		clear 
-		echo -e "${RED}[*] ${YELLOW}Listening your currently dns server:"(ignoring comments)"""
+		echo -e "${RED}[*] ${YELLOW}Listening your currently dns server:(ignoring comments)"
 		cat /etc/resolv.conf | sed '/#/d'
 		sleep 1
 		read -p "[?] Backup resolv.conf file[Y/N]?: " bck
@@ -545,19 +472,10 @@ $updd(){
 		then
 			echo -e "${BLUE}[*] ${GREEN}Backup original file..."
 			sleep 0.2
-			cp -R /etc/resolv.conf $path/backup 2&>$path/logs/log-cp-resolv.log
+			cp -R /etc/resolv.conf $path/backup 2&>${path}/logs/log-cp-resolv.log
 
 		else
-			echo -e "${GREEN}[~] ${RED}Skipping.."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping...."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping..."
+			echo -e "${GREEN}[~] ${RED}Skipping";run;print " \n\n"
 			pause 'Press [Enter] to continue'
 			clear
 		fi
@@ -575,7 +493,7 @@ $updd(){
 			echo -e "${RED}[!] ${MAGENTA}Adding following IP address to your DNS list: "
 			sleep 0.5
 			cat lib/anon_dns.txt | sed -r '/#/d'
-			rm -rf /etc/resolv.conf 
+			sudo mv /etc/resolv.conf backup/; sudo touch /etc/resolv.conf
 			cat lib/anon_dns.txt 2>/dev/null | tail -n2 >> /etc/resolv.conf
 			sleep 0.8
 			echo -e "${GREEN}[i] ${BLUE}Done."
@@ -592,7 +510,7 @@ $updd(){
 			sleep 0.5
 			cat lib/fast_dns.txt | sed -r '/#/d'
 			#sed -r '1,2 s/#/\r/' 
-			rm -rf /etc/resolv.conf
+			sudo mv /etc/resolv.conf backup/; sudo touch /etc/resolv.conf
 			cat lib/fast_dns.txt 2>/dev/null | tail -n2 >> /etc/resolv.conf
 			sleep 0.8
 			echo -e "${GREEN}[i] ${BLUE}Done."
@@ -605,30 +523,21 @@ $updd(){
 		fi
 	}
 	sourcesbk(){
-			clear
-			echo -e "${YELLOW}[*] ${BLUE}Setup Repository : /etc/apt/sources.list."
-			clear 
-			echo -e "${RED}[*] ${YELLOW}Printing current sources.list file..:"
-			cat /etc/apt/sources.list | sed '/#/d'
-			sleep 1
-			read -p "[?] Backup sources.list file[Y/N]?: " bck
-			if [[ $bck == "y" || $bck == "Y" ]]
+		clear
+		echo -e "${YELLOW}[*] ${BLUE}Setup Repository : /etc/apt/sources.list."
+		clear 
+		echo -e "${RED}[*] ${YELLOW}Printing current sources.list file:"
+		cat /etc/apt/sources.list | sed '/#/d'
+		sleep 1
+		read -p "[?] Backup sources.list file[Y/N]?: " bck
+		if [[ $bck == "y" || $bck == "Y" ]]
 		then
 			echo -e "${BLUE}[*] ${GREEN}Backup original file..."
 			sleep 0.2
 			cp -R /etc/apt/sources.list $path/backup 2&>$path/logs/copy-sources.log
 
 		else
-			echo -e "${GREEN}[~] ${RED}Skipping.."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping...."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping."
-			sleep 0.5
-			clear
-			echo -e "${GREEN}[~] ${RED}Skipping..."
+			echo -e "${GREEN}[~] ${RED}Skipping";run;print " \n\n";sleep 0.5
 			pause 'Press [Enter] to continue'
 			clear
 		fi
@@ -691,12 +600,43 @@ $updd(){
 	}
 
 	editor(){
+		brackets() {
+			curl -LO https://github.com/adobe/brackets/releases/download/release-1.14.1/Brackets.Release.1.14.1.64-bit.deb
+			sudo apt install ./Brackets.Release.1.14.1.64-bit.deb
+			mv -v Brackets.Release.1.14.1.64-bit.deb /tmp
+		}
+		atom() {
+			sudo apt install snapd -y
+			sudo apt update
+			sudo systemctl start snapd.service
+			sudo snap install atom --classic
+			echo "[*] Atom has been successfully installed."
+			sleep 1
+			}
+		visualcode() {
+			sudo apt install snapd -y
+			sudo apt update
+			sudo systemctl start snapd.service
+			sudo snap install --classic code
+			echo "[*] Visual Code Studio has been successfully installed."
+			sleep 1
+			}
+		bluefish() {
+			sudo apt-get install bluefish -y
+			echo "[*] Bluefish editor has been successfully installed."
+			}
+
+		geany() {
+			sudo apt-get install geany -y
+			echo "[*] Geany editor has been installed."
+		}
+
 		r=0
 		while [ $r = 0 ]
 			do
-			echo -e "${YELLOW}EDITOR INSTALLATION MENU ${BLUE}
+				echo -e "${YELLOW}EDITOR INSTALLATION MENU ${BLUE}
 
-- - 	Brackets	- -
+- - 	(b)rackets	- -
 		
 - -	(a)tom 		- -
 
@@ -706,42 +646,22 @@ $updd(){
 
 - -	(b)luefish 	- -
 
-- - 	(s)kip 		- -
-"
-		echo -e "${RED}Type the letter in () in lowercase f.e: a for atom."			
-			echo -ne "${GREEN}[?] Which linux code editor you would use?: "
-			read name
-			case "$name" in
-				b)
-				brackets
-				r=1
-				;;
-				a)
-				atom
-				r=1
-				;;
-				v)
-				visualcode
-				r=1
-				;;
-				b)
-				bluefish
-				r=1
-				;;
-				g)
-				geany
-				r=1
-				;;
-				s)
-				r=1
-				;;
-				*)
-				echo '[!] Wrong command!'
-				sleep 1
-				r=0
-				;;
-			esac
-		done
+- - 	(s)kip 		- -"
+
+				echo -e "${RED}Type the letter in () in lowercase f.e: a for atom."			
+				echo -ne "${GREEN}[?] Which linux code editor you would use?: "
+				read name
+				case "$name" in
+					b) brackets; r=1;;
+					a) atom; r=1;;
+					v) visualcode; r=1;;
+					b) bluefish; r=1;;
+					g) geany; r=1;;
+					s) r=1;;
+					*) echo '[!] Wrong command!'; sleep 1; r=0;;
+				esac
+			done
+
 	}
 
 	iso(){
@@ -753,7 +673,7 @@ $updd(){
 		if [[ $etch == "Y" || $etch == "y" ]]
 		then
 			clear
-			cd /root/Downloads
+			cd ~/Downloads
 			curl -LO https://github.com/balena-io/etcher/releases/download/v1.5.80/balena-etcher-electron-1.5.80-linux-x64.zip
 			unzip balena-etcher-electron-1.5.80-linux-x64.zip
 			rm balena-etcher-electron-1.5.80-linux-x64.zip
@@ -764,9 +684,9 @@ $updd(){
 			else
 				clear
 				echo -e "${RED}[!] ${MAGENTA}File not exists, will doing it for you."
-				cd /root/Downloads
-				mv -v balenaEtcher-1.5.80-x64.AppImage iso-burner &>/dev/null
-				mv -v iso-burner /usr/bin &>/dev/null
+				cd ~/Downloads
+				mv balenaEtcher-1.5.80-x64.AppImage iso-burner &>/dev/null
+				sudo mv iso-burner /usr/bin &>/dev/null
 			fi
 			clear
 			echo -e "${GREEN}[*] ${BLUE}You have successfully installed balena etcher."
@@ -789,7 +709,7 @@ $updd(){
 		cat results.txt | grep from | awk '{print $3 " " $4 " " $5}'
 		sleep 0.5
 		echo -ne "${GREEN}[*] ${MAGENTA}Your ms/ping is: "
-		head -n5 results.txt | tail -1 | awk 'NF>1{print $8, $NF}'
+		head -n5 results.txt | tail -1 | awk 'NF>1{print $9, $NF}'
 		sleep 0.5
 		echo -ne "${GREEN}[*] ${MAGENTA}Your download speed is: "
 		cat results.txt | grep Download | awk '{print $2, $3}'
@@ -802,8 +722,7 @@ $updd(){
 		curl ipinfo.io/ip
 		cd ..
 		echo ""
-		echo -e "${GREEN}[✓] ${YELLOW}Configuring successfully."	
-		echo -e "${GREEN}[i] ${BLUE}Skipped."
+		echo -e "${GREEN}[✓] ${YELLOW}Speedtest Successfully Done."	
 		pause 'Press [Enter] go back to menu'
 		full_config
 	}
@@ -814,65 +733,26 @@ $updd(){
 		echo -ne "${BLUE}【 mak3r@root 】${YELLOW}/full_config ${BLUE}~>:${RED} "
 		read f
 		case "$f" in
-			1)
-			sources
-			fc=1
-			;;
-			2)
-			packages
-			fc=1
-			;;
-			3)
-			kali_pack
-			fc=1
-			;;
-			4)
-			update
-			fc=1
-			;;
-			5)
-			tor
-			fc=1
-			;;
-			6)
-			dns
-			fc=1
-			;;
-			7)
-			password
-			fc=1
-			;;
-			8)
-			openvpn
-			fc=1
-			;;
-			9)
-			editor
-			fc=1
-			;;
-			10)
-			iso
-			fc=1
-			;;
-			11)
-			connection
-			fc=1
-			;;
-			back)
-			main
-			fc=1
-			;;
-			*)
-			echo -e "${RED}Wrong input!"
-			fc=0
-			;;
+			1) sources; fc=1;;
+			2) packages; fc=1;;
+			3) kali_pack; fc=1;;
+			4) update; fc=1;;
+			5) tor; fc=1;;
+			6) dns; fc=1;;
+			7) password; fc=1;;
+			8) openvpn; fc=1;;
+			9) editor; fc=1;;
+			10) iso; fc=1;;
+			11) connection; fc=1;;
+			back) main; fc=1;;
+			*) echo -e "${RED}Wrong input!"; fc=0;;
 		esac
 	done
 
 }
 
 
-function install_tools {
+install_tools() {
 	clear
 	figlet th3_T00Lz
 	echo ""
@@ -894,7 +774,7 @@ ${BLUE}[5] ${MAGENTA}DDoS Tools
 	#							   #
 	################################
 	
-	function infogath {
+	infogath() {
 		echo -e "${Green}[*] ${CYAN}Listing some information gathering tools: "
 		echo "
 		${YELLOW}[2] ${CYAN}FBI - Facebook Information Grabs Private Information Of Target.
@@ -909,57 +789,57 @@ ${BLUE}[5] ${MAGENTA}DDoS Tools
 		printf "${RED}【 mak3r@root 】 ${YELLOW}/install_tools/information_gathering/${BLUE}~>: "
 		read inf
 		
-		function fbi {
+		fbi() {
 			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
 			cd /opt
-			git clone https://github.com/xHak9x/fbi
+			sudo git clone https://github.com/xHak9x/fbi
 			cd fbi
-			pip2 install -r requirements.txt
+			sudo python3 -m pip install -r requirements.txt
 			clear
-			echo "alias fbi='python2 /opt/fbi/fbi.py'" >> /root/.bashrc
+			echo "alias fbi='python2 /opt/fbi/fbi.py'" >> ~/.bashrc
 			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
 			echo -e "${GREEN}[*] ${YELLOW}To start tool type: fbi"
 			}
 		
-		function sherlock {
+		sherlock() {
 			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
 			cd /opt
-			git clone https://github.com/sherlock-project/sherlock.git
+			sudo git clone https://github.com/sherlock-project/sherlock.git
 			cd sherlock
 			python3 -m pip install -r requirements.txt
 			clear
-			echo "alias sherlock='python3 /opt/sherlock/sherlock.py'" >> /root/.bashrc
+			echo "alias sherlock='python3 /opt/sherlock/sherlock.py'" >> ~/.bashrc
 			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
 			echo -e "${GREEN}[*] ${YELLOW}To start tool type: sherlock <username>"
 			}
 			
-		function inspector {
+		inspector() {
 			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
 			cd /opt
-			git clone https://github.com/Moham3dRiahi/Th3inspector.git
+			sudo git clone https://github.com/Moham3dRiahi/Th3inspector.git
 			cd Th3inspector
-			chmod +x install.sh && ./install.sh
+			sudo chmod +x install.sh && ./install.sh
 			clear
-			echo "alias theinspector='perl /opt/Th3inspector/Th3inspector.pl'" >> /root/.bashrc
+			echo "alias theinspector='perl /opt/Th3inspector/Th3inspector.pl'" >> ~/.bashrc
 			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
 			echo -e "${GREEN}[*] ${YELLOW}To start tool type: theinspector"
 			}
 			
-		function photon {
+		photon() {
 			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
 			cd /opt
-			git clone https://github.com/s0md3v/Photon.git
+			sudo git clone https://github.com/s0md3v/Photon.git
 			cd Photon
 			python3 -m pip install -r requirements.txt
 			clear
-			echo "alias photon='python3 /opt/Photon/photon.py'" >> /root/.bashrc
+			echo "alias photon='python3 /opt/Photon/photon.py'" >> ~/.bashrc
 			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
 			echo -e "${GREEN}[*] ${YELLOW}To start tool type: photon -u <url>"			
 			}
 			
-		function harvester {
+		harvester() {
 			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
-			apt-get install theharvester -y
+			sudo apt-get install theharvester -y
 			clear
 			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
 			echo -e "${GREEN}[*] ${YELLOW}To start tool type: theharvester"
@@ -967,46 +847,46 @@ ${BLUE}[5] ${MAGENTA}DDoS Tools
 		
 		}
 	
-	function wifihack {
+	wifihack() {
 		echo ""
 		}
 	
-	function phishtool {
+	phishtool() {
 		echo ""
 		}
 	
-	function ddostool {
+	ddostool() {
 		echo ""
 		}
 	
-	function websitetool {
+	websitetool() {
 		echo ""
 		}
 		
-	function randmontool {
+	randomtool() {
 		echo ""
 		}	
 
-	function toolcoll {
+	toolcoll() {
 		echo ""
 		}
 	
-		function bombtool {
-				echo -e "${RED}[*] ${YELLOW}SMS Bomb installation...."
-				cd $HOME
-				git clone https://github.com/TheSpeedX/TBomb.git
-				cd DDoS_DownloaderTBomb
-				chmod +rwx *sh
-				echo -e "${RED}[*] ${YELLOW}Done, installed in ${BLUE}$path ${YELLOW}to run type: ${GREEN}bash TBomb.sh"
-				sleep 1
-				pause 'Press [ENTER] to go back.'
+	bombtool() {
+		echo -e "${RED}[*] ${YELLOW}SMS Bomb installation...."
+		cd $HOME
+		git clone https://github.com/TheSpeedX/TBomb.git
+		cd DDoS_DownloaderTBomb
+		chmod +rwx *sh
+		echo -e "${RED}[*] ${YELLOW}Done, installed in ${BLUE}$path ${YELLOW}to run type: ${GREEN}bash TBomb.sh"
+		sleep 1
+		pause 'Press [ENTER] to go back.'
 		}
 
 	#this tools are coming soon.
 
 }
 
-function misc {
+misc() {
 	clear
 	echo -e $MAGENTA""
 	figlet MisC_0pti0nS
@@ -1045,7 +925,7 @@ ${RED}More Coming Soon :)
 		clear
 		echo -e "${RED}[!] Using sudo."
 		sleep 0.5
-		echo "# Cleared by @aut0_mak3r" > $HOME/.bash_history
+		echo "# Cleared by @aut0_mak3r" > ~/.bash_history
  		echo -e "${GREEN}[i] ${BLUE}Done."
 		echo -e $CYAN""
 		pause 'Press [ENTER] to go back'
@@ -1102,8 +982,8 @@ ${RED}More Coming Soon :)
 	elif [[ $sm == 9 ]]
 	then
 		clear
-		echo -ne "${YELLOW}[*] ${GREEN}Enter Video Path(/root/videos/video.mp4):${BLUE} "; read video
-		echo -ne "${YELLOW}[*] ${GREEN}Enter Output Name(/root/videos/audio.mp3):${BLUE} "; read audio
+		echo -ne "${YELLOW}[*] ${GREEN}Enter Video Path(~/Videos/video.mp4):${BLUE} "; read video
+		echo -ne "${YELLOW}[*] ${GREEN}Enter Output Name(~/Videos/audio.mp3):${BLUE} "; read audio
 		ffmpeg -i $video -f mp3 $audio &>/dev/null
 		if [ -f $audio ]
 		then	
@@ -1131,14 +1011,16 @@ ${RED}More Coming Soon :)
 	elif [[ $sm == 12 ]]
 	then
 		clear
-		wget -q -O - http://someonewhocares.org/hosts/ | grep ^127 >> /etc/hosts
-		wget -qO - http://infiltrated.net/blacklisted | awk '!/#|[a-z]/&&/./{print "iptables -A INPUT -s "$1" -j DROP"}'
+		wget -q -O - http://someonewhocares.org/hosts/ | grep ^127 | sudo tee /etc/hosts
+		#wget -qO - http://infiltrated.net/blacklisted | awk '!/#|[a-z]/&&/./{print "iptables -A INPUT -s "$1" -j DROP"}'
+		# potentially broken
+
 		echo -e $CYAN""
 		misc
 	elif [[ $sm == 13 ]]
 	then
 		clear
-		nmap -p 1-64435 --open localhost | grep tcp | cut -d\  -f1 | awk '{print "Open Ports: " $1}'
+		nmap -p 1-64435 --open localhost | grep tcp | cut -d\  -f1 | awk '{print "\033[34;1m[\033[31mOPEN\033[34m] \033[32mDetected Port: \033[37m" $1}'
 		echo -e $CYAN""
 		pause 'Press [ENTER] to go back'
 		misc
@@ -1185,7 +1067,7 @@ ${RED}More Coming Soon :)
 		clear
 		echo -ne "${GREEN}[i] ${YELLOW}Enter Target Wesbite(test.com):${RED} "
 		read target
-		nmap -sS --top-ports "1000" -sV -O -Pn -vv $target
+		sudo nmap -sS --top-ports "1000" -sV -O -Pn -vv $target
 		echo -e $CYAN""
 		pause 'Press [ENTER] to go back'
 		misc
@@ -1194,7 +1076,7 @@ ${RED}More Coming Soon :)
 		clear
 		echo -e "${GREEN}[i] ${BLUE}Clearing logs...."
 		sleep 1
-		echo '' > /var/log/*.log || echo -e "${RED}[!] ${YELLOW}Cannot overwrite logs, make sure you use root!"
+		sudo echo '' > /var/log/*.log || echo -e "${RED}[!] ${YELLOW}Cannot overwrite logs, make sure you use root!"
 		pause 'Press [ENTER] to go back'
 		misc
 	elif [[ "$sm" == "back" ]]
@@ -1208,7 +1090,7 @@ ${RED}More Coming Soon :)
 	fi
 }
 
-function tt {
+tt() {
 	clear
 	termux_tools
 }
@@ -1216,9 +1098,9 @@ function tt {
 ###############################
 
 
-function termux_tools {
+termux_tools() {
 
-	function update_ter {
+	update_ter() {
 		clear
 		echo -e "${GREEN}[*] ${YELLOW}Installing updates, hold on.."
 		apt update
@@ -1229,7 +1111,7 @@ function termux_tools {
 		termux_tools
 	}
 
-	function install_pck {
+	install_pck() {
 		clear
 		echo -e "${GREEN}[*] ${YELLOW}Installing Termux packages, hold on.."
 		sleep 1
@@ -1243,8 +1125,8 @@ function termux_tools {
 		termux_tools
 	}
 
-	function mobile_pt {
-		function instagram {
+	mobile_pt() {
+		instagram() {
 			clear
 			figlet "Loading Module."
 			sleep 0.5; clear
@@ -1265,7 +1147,7 @@ function termux_tools {
 
 		}
 
-		function viperzcrew {
+		viperzcrew() {
 			clear
 			figlet "Loading Module."
 			sleep 0.5; clear
@@ -1285,7 +1167,7 @@ function termux_tools {
 			bash lib/viperzcrew.sh
 		}
 
-		function facebook {
+		facebook() {
 			echo -e "${GREEN}[i] ${BLUE}Under progress ;)"
 			pause 'Press [Enter] To Go Back'
 			termux_tools
@@ -1306,61 +1188,17 @@ ${RED}[main] ${YELLOW}Back To Main Menu
 		ds=0
 		while [ $ds = 0 ]
 		do
-			echo -ne "${RED}【 mak3r@root 】 ${YELLOW}/termux_tools/mobile_pentest ${BLUE}~>: "
+			echo -ne "${RED}【 mak3r@github 】 ${YELLOW}/termux_tools/mobile_pentest ${BLUE}~>: "
 			read tood
 			case "$tood" in
-				1)
-				clear
-				instagram
-				ds=1
-				;;
-				2)
-				clear
-				viperzcrew
-				ds=1
-				;;
-				3)
-				clear
-				facebook
-				ds=1
-				;;
-				4)
-				clear
-				echo ""
-				echo -e "${RED}[*] ${YELLOW}DDoS Downloader installation...."
-				cd $HOME
-				git clone https://github.com/ViperZCrew/DDoS_Downloader
-				cd DDoS_Downloader
-				chmod +rwx *sh
-				echo -e "${RED}[*] ${YELLOW}Done, installed in ${BLUE}$path ${YELLOW}to run type: ${GREEN}bash ddos_downloader.sh"
-				sleep 1
-				pause 'Press [ENTER] to go back.'
-				termux_tools
-				ds=1
-				;;
-				5)
-				clear
-				echo -e "${RED}[*] ${YELLOW}Metasploit framework installation...."
-				pkg install unstable-repo -y
-				sleep 1
-				echo -e "${RED}[*] ${YELLOW}This take a lot of time, chill out."
-				apt install metasploit -y
-				pause 'Press [ENTER] to go back.'
-				termux_tools
-				ds=1
-				;;
-				back)
-				termux_tools
-				ds=1
-				;;
-				main)
-				main
-				ds=1
-				;;
-				*)
-				echo '[!] Wrong command!'
-				sleep 1
-				;;
+				1) clear; instagram; ds=1;;
+				2) clear; viperzcrew; ds=1;;
+				3) clear; facebook; ds=1;;
+				4) clear; echo ""; echo -e "${RED}[*] ${YELLOW}DDoS Downloader installation...."; cd $HOME; git clone https://github.com/ViperZCrew/DDoS_Downloader; cd DDoS_Downloader; chmod +x *.sh; echo -e "${RED}[*] ${YELLOW}Done, installed in ${BLUE}$path ${YELLOW}to run type: ${GREEN}bash ddos_downloader.sh"; sleep 1; pause 'Press [ENTER] to go back.'; termux_tools; ds=1;;
+				5) clear; echo -e "${RED}[*] ${YELLOW}Metasploit framework installation...."; pkg install unstable-repo -y; sleep 1; echo -e "${RED}[*] ${YELLOW}This take a lot of time, chill out."; apt install metasploit -y; pause 'Press [ENTER] to go back.'; termux_tools; ds=1;;
+				back) termux_tools; ds=1;;
+				main) main; ds=1;;
+				*) echo '[!] Wrong command!'; sleep 1;;
 			esac
 		done
 	}
@@ -1380,7 +1218,7 @@ ${RED}[menu] ${YELLOW}Back To Main Menu
 	tto=0
 	while [ $tto = 0 ]
 	do
-		echo -ne "${RED}【 mak3r@root 】 ${YELLOW}/termux_tools ${BLUE}~>: "
+		echo -ne "${RED}【 mak3r@github 】 ${YELLOW}/termux_tools ${BLUE}~>: "
 		read termt
 		case $termt in
 			1)
@@ -1412,19 +1250,19 @@ ${RED}[menu] ${YELLOW}Back To Main Menu
 	done
 }
 
-function custom_term {
-	echo -e "${RED}[*] ${YELLOW}Customize your terminal with mrblackx..."
+custom_term() {
+	echo -ne "${RED}[*] ${YELLOW}Customize your terminal";run;printf "\n\n";sleep 0.5
 	sleep 1
 	echo -ne "${YELLOW}[>] ${RED}Enter your name:${BLUE} "
 	read name
-	echo -e "${GREEN}[*] ${BLUE}Doing the work...."
+	echo -e "${GREEN}[*] ${BLUE}Doing the work";run;printf "\n\n";sleep 0.5
 	sleep 2
 	cd ..; cd ..
 	cd /data/data/com.termux/files/usr/etc
 	cp -R bash.bashrc $HOME/aut0_mak3r/backup
 	mv -v bash.bashrc bash.bashrc.bak
 	touch bash.bashrc
-	echo -e "PS1='\n\e[32mCurrent Directory: \e[35m\w/\n\e[31;1;40mtermux\e[37;0;40m@\e[36;1;40m$name~: '" >> bash.bashrc
+	echo "PS1='\[\e[0;1;92m\]Current Directory: \[\e[0;1;95m\]\w\[\e[m\]\n\[\e[0;1;91m\]\u\[\e[0;1;97m\]@\[\e[0;1;96m\]\H\[\e[0;1m\]~\[\e[0;1m\]:\[\e[m\] \[\e0'" >> bash.bashrc
 	clear
 	sleep 1
 	cd ..; cd ..; cd home/aut0_mak3r
@@ -1437,7 +1275,7 @@ function custom_term {
 
 
 
-function credits {
+credits() {
 	clear
 	echo -e "
 ｡☆✼★━━━━━━━━━━━━━━━━━━━━━★✼☆｡	
@@ -1451,12 +1289,13 @@ function credits {
 ╲┃┈┈┈┈╭━┳━━━━╯
 ╲┣━━━━━━┫
 
-${GREEN}Coded by			: ${MAGENTA}TheMasterCH
+${GREEN}Coded by			: ${MAGENTA}MrBlackX
+${GREEN}Fixed by			: ${MAGENTA}0n1cOn3
 ${GREEN}Insta Tools Collected 		: ${MAGENTA}BlackFlare
 ${GREEN}ViperZCrew Tools Collected	: ${MAGENTA}Legend
-${GREEN}Facebook Tools Collected	: ${MAGENTA}TheMasterCH
+${GREEN}Facebook Tools Collected	: ${MAGENTA}MrBlackX
 ${RED}
-｡☆✼★━━━━━━━━━━━━━━━━━━━━━★✼☆
+｡☆✼★━━━━━━━━━━━━━━━━━━━━━★✼☆｡
 
 
 ${BLUE}Telegram : ${YELLOW}t.me/leakerhounds
@@ -1466,36 +1305,24 @@ ${BLUE}Telegram : ${YELLOW}t.me/deepwaterleak2
 ${BLUE}Telegram : ${YELLOW}t.me/viperzcrew
 
 
-${RED}｡☆✼★━━━━━━━━━━━━━━━━━━━━━★✼☆
+${RED}｡☆✼★━━━━━━━━━━━━━━━━━━━━━★✼☆｡
 	"
 	echo -e "${GREEN}"
 	pause 'Press [ENTER] to go back'
 	bash 4ut0m4t10n.sh
 	}
 
-function quit {	
+quit() {	
 	clear
 	echo -e "${RED}[*] ${YELLOW} Pre-setting options."
-	pause 'Press [Enter] to continue....'
-	echo -e "${RED}[*] ${CYAN}Quitting.."
-	sleep 0.5
-	clear
-	echo -e "${RED}[*] ${CYAN}Quitting..."
-	sleep 0.5
-	clear
-	echo -e "${RED}[*] ${CYAN}Quitting...."
-	sleep 0.5
-	clear
-	echo -e "${RED}[*] ${CYAN}Quitting.."
-	sleep 0.5
-	clear
-	echo -e "${RED}[*] ${CYAN}Quitting..."
+	pause 'Press [Enter] to continue'
+	echo -e "${RED}[*] ${CYAN}Quitting";run;printf "\n\n";sleep 0.5
 	sleep 0.5
 	clear
 	exit
 	}
 
-function os {
+os() {
 	un=$(uname -m)
 	if [[ $un == "x86_64" ]]
 	then
@@ -1528,7 +1355,7 @@ echo -e $RED"Version		: $version"
 echo -e $GREEN"Tools		: 59"
 echo -e $MAGENTA"Creator		: MrBlackX"
 echo -e $MAGENTA"Contributer	: 0n1cOn3"
-echo -e $BLUE"Telegram 	: @TheMasterCH"
+echo -e $BLUE"Telegram 	: @viperzcrew"
 echo ""
 command_check
 echo ""
@@ -1574,42 +1401,14 @@ do
 	echo -ne "【 mak3r@root 】~>:${RED} "
 	read ex
 	case "$ex" in
-		full_config)
-		full_config
-		x=1
-		;;
-		install_tools)
-		echo -e "${RED}[!] ${BLUE}Sorry this is under process."
-		x=1
-		;;
-		misc)
-		misc
-		x=1
-		;;
-		termux_tools)
-		termux_tools
-		x=1
-		;;
-		credits)
-		credits
-		x=1
-		;;
-		tools)
-		bash lib/communitytools.sh
-		x=1
-		;;
-		quit)
-		quit
-		x=1
-		;;
-		q)
-		x=1
-		echo 'Exiting..'
-		sleep 0.5
-		;;
-		*)
-		echo '[!] Wrong command!'
-		sleep 1
-		;;
+		full_config) full_config; x=1;;
+		install_tools) echo -e "${RED}[!] ${BLUE}Sorry this is under process."; x=1;;
+		misc) misc; x=1;;
+		termux_tools) termux_tools; x=1;;
+		credits) credits; x=1;;
+		tools) bash lib/communitytools.sh; x=1;;
+		quit) quit; x=1;;
+		q) x=1; echo 'Exiting..'; sleep 0.5;;
+		*) echo '[!] Wrong command!'; sleep 1;;
 	esac
 done
