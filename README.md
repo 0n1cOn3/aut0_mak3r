@@ -135,7 +135,7 @@ _Developer & Contact :_
 # Social Media
 Telegram:
 * @LeakerHounds
-* @On1c0n3
+* @hx
 
 
 
