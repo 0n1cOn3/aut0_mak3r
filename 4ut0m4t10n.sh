@@ -3,7 +3,7 @@
 # __author__      : mrblackx
 # __description__ : configuration tool
 # __time__        : 5 months
-# __version__     : v0.3d-beta1
+# __version__     : v0.3e
 
 
 path=$(pwd)
@@ -875,7 +875,7 @@ ${BLUE}[5] ${MAGENTA}DDoS Tools
 		pause 'Press [ENTER] to go back.'
 		}
 
-	#this tools are coming soon.
+	#those tools coming soon.
 
 }
 
