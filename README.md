@@ -33,7 +33,8 @@
   - [x] Adding Update Checker
  
  ## Already leaked:
-  
+  **Version 0.3c-Beta 2**
+  *  * Code improvments
   **Version 0.3c-Beta 1**
   * Code improvments
   * Bug fixing
