@@ -1,61 +1,63 @@
-path=$(pwd)
+#!/bin/bash
+set -euo pipefail
+trap 'error_exit "OpenVPN failed" "$?"' ERR
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../lib/common.sh
+source "$DIR/lib/common.sh"
+
+command -v openvpn >/dev/null || error_exit "openvpn not installed" "$ERR_MISSING_DEP"
 
 function NL {
-	cd ..
-	cd openvpn/1---FreeVPN.me---NL
+        cd "$DIR/openvpn/1---FreeVPN.me---NL"
 	clear
-	echo -e $BLUE "Username : $username"
-	echo -e $BLUE "Password : $password"
+        echo -e "$BLUE Username : $username"
+        echo -e "$BLUE Password : $password"
 	sleep 1
 	openvpn --config FreeVPN.me-UDP-40000.ovpn
 }
 
 function FR {
-	cd ..
-	cd openvpn/2----FreeVPN.se---FR
+        cd "$DIR/openvpn/2----FreeVPN.se---FR"
 	clear
-	echo -e $BLUE "Username : $username"
-	echo -e $BLUE "Password : $password"
+        echo -e "$BLUE Username : $username"
+        echo -e "$BLUE Password : $password"
 	sleep 1
 	openvpn --config FreeVPN.se-UDP-40000.ovpn
 }
 
 function FR2 {
-	cd ..
-	cd openvpn/3---FreeVPN.im---FR
+        cd "$DIR/openvpn/3---FreeVPN.im---FR"
 	clear
-	echo -e $BLUE "Username : $username"
-	echo -e $BLUE "Password : $password"
+        echo -e "$BLUE Username : $username"
+        echo -e "$BLUE Password : $password"
 	sleep 1
 	openvpn --config FreeVPN.im-UDP-40000.ovpn
 }
 
 function FR3 {
-	cd ..
-	cd openvpn/4---FreeVPN.it---FR
+        cd "$DIR/openvpn/4---FreeVPN.it---FR"
 	clear
-	echo -e $BLUE "Username : $username"
-	echo -e $BLUE "Password : $password"
+        echo -e "$BLUE Username : $username"
+        echo -e "$BLUE Password : $password"
 	sleep 1
 	openvpn --config FreeVPN.it-UDP-40000.ovpn
 }
 
 function PL {
-	cd ..
-	cd openvpn/5---FreeVPN.be---PL
+        cd "$DIR/openvpn/5---FreeVPN.be---PL"
 	clear
-	echo -e $BLUE "Username : $username"
-	echo -e $BLUE "Password : $password"
+        echo -e "$BLUE Username : $username"
+        echo -e "$BLUE Password : $password"
 	sleep 1
 	openvpn --config FreeVPN.be-UDP-40000.ovpn
 }
 
 function DE {
-	cd ..
-	cd openvpn/6---FreeVPN.co.uk---DE
+        cd "$DIR/openvpn/6---FreeVPN.co.uk---DE"
 	clear
-	echo -e $BLUE "Username : $username"
-	echo -e $BLUE "Password : $password"
+        echo -e "$BLUE Username : $username"
+        echo -e "$BLUE Password : $password"
 	sleep 1
 	openvpn --config FreeVPN.co.uk-UDP-40000.ovpn
 }
@@ -63,8 +65,13 @@ function DE {
 username="freevpn.me"
 RED="\e[31m"
 BLUE="\e[34m"
-curl https://freevpn.me/accounts/ 2> /dev/null | egrep -Eio ">OpenVPN</h3>.*" | egrep -Eio "Username.*?</li><li><b>Unlimited</b>" | awk '{print $2"\n"$3}' | cut -d'<' -f1 > pass.txt
-password=$(cat pass.txt | tail -1)
+tmpfile=$(mktemp)
+curl -s https://freevpn.me/accounts/ | \
+  grep -Eio ">OpenVPN</h3>.*" | \
+  grep -Eio "Username.*?</li><li><b>Unlimited</b>" | \
+  awk '{print $2"\n"$3}' | cut -d'<' -f1 > "$tmpfile"
+password=$(tail -n 1 "$tmpfile")
+rm -f "$tmpfile"
 
 clear
 echo -e $RED "Available countries:"
