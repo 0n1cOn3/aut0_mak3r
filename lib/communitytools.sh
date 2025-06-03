@@ -58,7 +58,7 @@ ${ob}${bd}                                               ${rs}       ${y}_____[ 
                                                       ${y}|::::::::::::::|\-${rs}
                                                       ${y}'=============='()${rs}
 ${or}by @ViperZCrew${rs}                                        ${or}Private Collection${rs}
-${og}GitHub${rs}                                                ${og}https://github.com/rebl0x3r/aut0_mak3r${rs}
+${og}GitHub${rs}                                                ${og}https://github.com/0n1c0n3/aut0_mak3r${rs} ${y}(originally rebl0x3r)${rs}
 ${oy}Directory:${rs}                                            ${oy}$path${rs}
 ${op}Version:${rs}                                              ${op}v0.1${rs}         
     "
@@ -105,7 +105,7 @@ ${op}Version:${rs}                                              ${op}v0.1${rs}
                 cd ..; cd ..
             else
                 cd lib
-                git clone https://github.com/rebl0x3r/pr0xyscr4p3r
+                git clone https://github.com/0n1c0n3/pr0xyscr4p3r # originally from rebl0x3r
                 cd pr0xyscr4p3r; bash proxy.sh
                 cd ..; cd ..
             fi

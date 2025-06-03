@@ -44,7 +44,7 @@ ${ob}${bd} █     ██   █   █   █   █▄▄▄█   █  █ █ █
 ${ob}${bd}  █▄▄▄█ █▄▄▄█▄▄▄█   █▄▄▄▄▄▄▄█▄▄▄█  █▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄█  █▄█▄▄▄▄▄▄▄█▄▄█ █▄▄█${rs}
 ${rs}
 ${or}by @ViperZCrew${rs}                                        ${op}collected by @TheMasterCH${rs}
-${og}GitHub${rs}                                                ${og}https://github.com/rebl0x3r${rs}
+${og}GitHub${rs}                                                ${og}https://github.com/0n1c0n3${rs} ${y}(originally rebl0x3r)${rs}
 ${oy}Directory:${rs}                                            ${oy}$path${rs}
       
 

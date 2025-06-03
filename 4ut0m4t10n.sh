@@ -3,7 +3,11 @@
 # __author__      : mrblackx
 # __description__ : configuration tool
 # __time__        : 5 months
-# __version__     : v0.3e
+# __version__     : v0.3f
+# __maintainer__  : 0n1c0n3
+
+set -euo pipefail
+trap 'err_report $?' ERR
 
 
 path=$(pwd)
@@ -11,19 +15,12 @@ backup_window_size="printf '\e[8;24;80t'"
 ipaddr="$(curl -s ifconfig.me)"
 ipaddr2="$(curl -s icanhazip.com)"
 host="$(uname -n)"
-version="0.3d-beta2"
+version="0.3f"
 l="."
 
-#some colors
-RED="\e[31m"
-GREEN="\e[32m"
-YELLOW="\e[33m"
-BLUE="\e[34m"
-MAGENTA="\e[35m"
-CYAN="\e[36m"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$DIR/lib/common.sh"
 RESTORE="\e[39"
-BOLD="\e[1m"
-NORMAL="\e[0m"
 
 
 #printf '\e[8;37;100t'
@@ -31,48 +28,40 @@ NORMAL="\e[0m"
 # Functions
 
 update(){
-	#up=$(git pull &>/dev/null)
-	echo -e "${MAGENTA}[*] ${BLUE}Check if you up-to-date..."
-	echo ""
-	sleep 0.5
-	if [[ "$up" == "Already up to date." ]]
-	then
-		echo -e "${GREEN}[i] ${BLUE}Already on the latest version :-)"
-	else
-		#git pull -q &>/dev/null
-		echo -e "${MAGENTA}[*] ${BLUE}Tool is updated to version $version."
-	fi
-
+    echo -e "${MAGENTA}[*] ${BLUE}Checking for updates..."
+    echo ""
+    sleep 0.5
+    local output
+    if output=$(git pull --quiet 2>&1); then
+        if [[ $output == *"Already up to date."* ]]; then
+            echo -e "${GREEN}[i] ${BLUE}Already on the latest version :-)"
+        else
+            echo -e "${MAGENTA}[*] ${BLUE}Tool updated to version $version."
+        fi
+    else
+        echo -e "${RED}[!] ${YELLOW}Update failed" >&2
+    fi
 }
+
 
 main() {
 	o="$(uname -o)"
 	if [ $o == "Android" ]
 	then
 		cd $HOME/aut0_mak3r
-		bash 4ut0m4t10n.sh
+		[ -z "$AUTO_MAK3R_MODULAR" ] && bash 4ut0m4t10n.sh
 	else
 		tmaker
 	fi
 }
 run(){
-	for i in {1..3}
-	do
-		echo -ne "${l:0:$i}";sleep 0.8
-	done
+        run_spinner
 }
 err_report() {
-		if exit[1]
-		then
-			echo -e $RED "Please report all errors to: ${BLUE}https://github.com/ViperZCrew"
-			read -p "Do you want to report error?[Y/N]: " rprt
-			if [[ $rprt == "y" || $rprt == "Y" ]]
-			then 
-				firefox https://github.com/ViperZCrew
-			else
-				err_solver
-			fi
-		fi
+        local code=$1
+        print_error "An unexpected error occurred." "$code"
+        echo -e "${YELLOW}Please report it at https://github.com/0n1c0n3/aut0_mak3r/issues (originally by rebl0x3r)" >&2
+        exit "$code"
 }
 
 err_solver() {
@@ -81,7 +70,7 @@ err_solver() {
 	echo -e "${RED}[!] ${YELLOW}Wrong command..."
 	sleep 2
 	clear
-	bash 4ut0m4t10n.sh
+	[ -z "$AUTO_MAK3R_MODULAR" ] && bash 4ut0m4t10n.sh
 }
 
 package_installer() {
@@ -147,13 +136,13 @@ command_check() {
 	then
 		if [ -f /usr/bin/tmaker ]
 		then
-			sudo rm -rf /usr/bin/tmaker
-			sudo cp -R 4ut0m4t10n.sh /usr/bin/tmaker 
+                        sudo rm -f /usr/bin/tmaker
+                        sudo cp -f "$DIR/4ut0m4t10n.sh" /usr/bin/tmaker
 			sudo chmod +x /usr/bin/tmaker
 			echo -e "${GREEN}[*] ${YELLOW}You can call the tool by: ${BLUE}tmaker"
 		else
 			echo -e "${RED}[*] ${YELLOW}Tool is not callable, adding it...."
-			sudo cp -R 4ut0m4t10n.sh /usr/bin/tmaker 
+                        sudo cp -f "$DIR/4ut0m4t10n.sh" /usr/bin/tmaker
 			sudo chmod +x /usr/bin/tmaker
 			echo -e "${GREEN}[*] ${YELLOW}Done."
 			echo -e "${GREEN}[*] ${YELLOW}You can call the tool by: ${BLUE}tmaker"
@@ -162,13 +151,13 @@ command_check() {
 	then
 		if [ -f /data/data/com.termux/files/files/usr/bin/tmaker ]
 		then
-			rm -rf /data/data/com.termux/files/usr/bin/tmaker
-			cp -R 4ut0m4t10n.sh /data/data/com.termux/files/usr/bin/tmaker 
+                        rm -f /data/data/com.termux/files/usr/bin/tmaker
+                        cp -f "$DIR/4ut0m4t10n.sh" /data/data/com.termux/files/usr/bin/tmaker
 			chmod +x /data/data/com.termux/files/usr/bin/tmaker
 			echo -e "${GREEN}[*] ${YELLOW}You can call the tool by: ${BLUE}tmaker"
 		else
 			echo -e "${RED}[*] ${YELLOW}Tool is not callable, adding it...."
-			cp -R 4ut0m4t10n.sh /data/data/com.termux/files/usr/bin/tmaker 
+                        cp -f "$DIR/4ut0m4t10n.sh" /data/data/com.termux/files/usr/bin/tmaker
 			chmod +x /data/data/com.termux/files/usr/bin/tmaker
 			echo -e "${GREEN}[*] ${YELLOW}Done."
 			echo -e "${GREEN}[*] ${YELLOW}You can call the tool by: ${BLUE}tmaker"
@@ -746,138 +735,11 @@ ${updd}(){
 
 
 install_tools() {
-	clear
-	figlet th3_T00Lz
-	echo ""
-	echo ""
-	echo -e "
-${RED}[1] ${MAGENTA}Information Gathering			${BLUE}[6] ${MAGENTA}Website Tools
-${YELLOW}[2] ${MAGENTA}WiFi Hacking				${YELLOW}[7] ${MAGENTA}Random Tools 
-${GREEN}[3] ${MAGENTA}Phishing Tools			   	${GREEN}[8] ${MAGENTA}Tools Collection
-${YELLOW}[4] ${MAGENTA}Bruteforcer & Password Tools 		${RED}[9] ${MAGENTA}Bomber - SMS - E-Mail
-${BLUE}[5] ${MAGENTA}DDoS Tools
-	"
-	
-	printf "${YELLOW}[*] ${GREEN}Select category: "
-	read catg
-	
-	################################
-	# 							   #
-	# Functions for all categories #
-	#							   #
-	################################
-	
-	infogath() {
-		echo -e "${Green}[*] ${CYAN}Listing some information gathering tools: "
-		echo "
-		${YELLOW}[2] ${CYAN}FBI - Facebook Information Grabs Private Information Of Target.
-		${YELLOW}[3] ${CYAN}Sherlock - Hunts Down Username On Over 30 Different Platforms With Same Name.
-		${YELLOW}[4] ${CYAN}Th3Inspector - It A Basic Tool For Gathering Information Of Websites.
-		${YELLOW}[5] ${CYAN}Photon - Incredibly Fast Crawler Designed For OSINT.
-		${YELLOW}[6] ${CYAN}theHarvester - Doing OSINT To Crawl Emails, Names, Domains, IPs.
-		${YELLOW}[7] ${CYAN}Back To Menu
-		
-		"
-		
-		printf "${RED}【 mak3r@github 】 ${YELLOW}/install_tools/information_gathering/${BLUE}~>: "
-		read inf
-		
-		fbi() {
-			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
-			cd /opt
-			sudo git clone https://github.com/xHak9x/fbi
-			cd fbi
-			sudo python3 -m pip install -r requirements.txt
-			clear
-			echo "alias fbi='python2 /opt/fbi/fbi.py'" >> ~/.bashrc
-			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
-			echo -e "${GREEN}[*] ${YELLOW}To start tool type: fbi"
-			}
-		
-		sherlock() {
-			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
-			cd /opt
-			sudo git clone https://github.com/sherlock-project/sherlock.git
-			cd sherlock
-			python3 -m pip install -r requirements.txt
-			clear
-			echo "alias sherlock='python3 /opt/sherlock/sherlock.py'" >> ~/.bashrc
-			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
-			echo -e "${GREEN}[*] ${YELLOW}To start tool type: sherlock <username>"
-			}
-			
-		inspector() {
-			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
-			cd /opt
-			sudo git clone https://github.com/Moham3dRiahi/Th3inspector.git
-			cd Th3inspector
-			sudo chmod +x install.sh && ./install.sh
-			clear
-			echo "alias theinspector='perl /opt/Th3inspector/Th3inspector.pl'" >> ~/.bashrc
-			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
-			echo -e "${GREEN}[*] ${YELLOW}To start tool type: theinspector"
-			}
-			
-		photon() {
-			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
-			cd /opt
-			sudo git clone https://github.com/s0md3v/Photon.git
-			cd Photon
-			python3 -m pip install -r requirements.txt
-			clear
-			echo "alias photon='python3 /opt/Photon/photon.py'" >> ~/.bashrc
-			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
-			echo -e "${GREEN}[*] ${YELLOW}To start tool type: photon -u <url>"			
-			}
-			
-		harvester() {
-			echo -e "${GREEN}[*] ${BLUE}Installing tool.."
-			sudo apt-get install theharvester -y
-			clear
-			echo -e "${GREEN}[*] ${YELLOW}Successfully installed, to use tool restart terminal."
-			echo -e "${GREEN}[*] ${YELLOW}To start tool type: theharvester"
-			}
-		
-		}
-	
-	wifihack() {
-		echo ""
-		}
-	
-	phishtool() {
-		echo ""
-		}
-	
-	ddostool() {
-		echo ""
-		}
-	
-	websitetool() {
-		echo ""
-		}
-		
-	randomtool() {
-		echo ""
-		}	
-
-	toolcoll() {
-		echo ""
-		}
-	
-	bombtool() {
-		echo -e "${RED}[*] ${YELLOW}SMS Bomb installation...."
-		cd $HOME
-		git clone https://github.com/TheSpeedX/TBomb.git
-		cd DDoS_DownloaderTBomb
-		chmod +rwx *sh
-		echo -e "${RED}[*] ${YELLOW}Done, installed in ${BLUE}$path ${YELLOW}to run type: ${GREEN}bash TBomb.sh"
-		sleep 1
-		pause 'Press [ENTER] to go back.'
-		}
-
-	#those tools coming soon.
-
+    local SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    source "$SCRIPT_DIR/lib/tool_installer.sh"
+    tool_installer_menu
 }
+
 
 misc() {
 	clear
@@ -1232,7 +1094,7 @@ ${RED}[menu] ${YELLOW}Back To Main Menu
 			;;
 			menu)
 			cd $path
-			bash 4ut0m4t10n.sh
+			[ -z "$AUTO_MAK3R_MODULAR" ] && bash 4ut0m4t10n.sh
 			tto=1
 			;;
 			*)
@@ -1302,7 +1164,7 @@ ${RED}｡☆✼★━━━━━━━━━━━━━━━━━━━━�
 	"
 	echo -e "${GREEN}"
 	pause 'Press [ENTER] to go back'
-	bash 4ut0m4t10n.sh
+	[ -z "$AUTO_MAK3R_MODULAR" ] && bash 4ut0m4t10n.sh
 	}
 
 quit() {	
@@ -1325,6 +1187,21 @@ os() {
 		echo -e "${RED}[i] ${GREEN}OS: ${RED}Termux"
 	fi
 }
+ 
+# handle module arguments
+if [ -n "$1" ]; then
+    case "$1" in
+        full_config) full_config ;;
+        install_tools) install_tools ;;
+        misc) misc ;;
+        termux_tools) termux_tools ;;
+        credits) credits ;;
+        tools) bash lib/communitytools.sh ;;
+        quit) quit ;;
+        *) echo "Unknown module: $1"; exit 1 ;;
+    esac
+    exit 0
+fi
 
 #banner
 
@@ -1347,7 +1224,7 @@ echo ""
 echo -e $RED"Version		: $version"
 echo -e $GREEN"Tools		: 59"
 echo -e $MAGENTA"Creator		: MrBlackX"
-echo -e $MAGENTA"Contributer	: 0n1cOn3"
+echo -e $MAGENTA"Maintainer          : 0n1c0n3"
 echo -e $BLUE"Telegram 	: @viperzcrew"
 echo ""
 command_check
@@ -1393,7 +1270,7 @@ do
 	read ex
 	case "$ex" in
 		full_config) full_config; x=1;;
-		install_tools) echo -e "${RED}[!] ${BLUE}Sorry this is under process."; x=1;;
+		install_tools) install_tools; x=1;;
 		misc) misc; x=1;;
 		termux_tools) termux_tools; x=1;;
 		credits) credits; x=1;;

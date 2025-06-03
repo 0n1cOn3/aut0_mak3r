@@ -1,5 +1,5 @@
 Do not remove openvpn.sh!
-If you want to use openvpn manually, type following commands:
+If you want to use OpenVPN manually, run the following commands:
 
 cd aut0_mak3r/openvpn
 bash openvpn.sh
@@ -8,12 +8,13 @@ Choose your country
 
 Enter credentials
 
-After that you are connected, do not close the terminal until you want to be connected to.
+Once connected, keep the terminal open until you want to disconnect.
 
-Leave also this README.txt file
+Please also keep this README.txt file
 
 Thanks for reading
 
-@rebl0x3r cr3w
+Originally developed by rebl0x3r cr3w
+Currently maintained by 0n1c0n3
 
 -----------------------------------
