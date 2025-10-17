@@ -17,7 +17,7 @@
 
 This project has been in development for a long time and already offers many features despite its small size. If you wipe a computer you might be annoyed by reinstalling tools manually—**aut0 mak3r** solves this problem for you.
 
-Modules such as `full_config` install and configure many components automatically. "The maker" was the original name, so the logo remains. If you encounter any errors, please visit the [Bug Report](#bug-report) section. Feel free to request additional Termux tools.
+The project is now powered by a lightweight modular launcher that keeps individual features in self-contained modules. Each module focuses on a single responsibility which makes the codebase easier to understand, maintain and extend. If you encounter any errors, please visit the [Bug Report](#bug-report) section.
   
 
 # Changelog
@@ -46,14 +46,9 @@ Modules such as `full_config` install and configure many components automaticall
 
   Some features are not yet available but will be coming soon
 
-  * Full Linux Configuration (Sources, Kali Tools, OpenVPN...)
-  * Pentesting Tools Installation (many GitHub tools)
-  * Install Tools menu for automatic or manual tool installation
-  * Cool Command Line Features (delete history, print all IPs in the network, check open ports... and much more!)
-  * Termux Tools (Instagram attacks/Facebook attacks/Metasploit/DDoS)
-  * Termux Update Installation (Updating Termux)
-  * Termux Necessary Package Installation (Installing some packages)
-  * Community Tools (Combo Editor, MySQL Exploiter, Proxyscraper, Dead Pinger, Password, Payloader, Evil Wifi, WhatSpam, B00t3r, FTP Exploit, Gmail Bruter, MAC Gen, Pentestbox, r00tw0rm, DDoS Scripts, SSH Exploit, JexBoss, Telnet Bruter)
+  * Modular launcher with a curated set of focused utilities
+  * Install Tools menu with automatic/manual installation, platform-aware package lists and one-click upgrades
+  * Cool Command Line Features (delete history, list local/public IPs, traceroute, DNS/WHOIS lookups, open port scans, network sweeps, speed tests, log tailing, resource monitors and more)
   * Command Execution (tmaker)
   
 # Disclaimer
@@ -97,7 +92,13 @@ If these variables are provided, their values appear in the menu. The script
 should also define a `run` function that performs the module action. New tools
 become available simply by dropping a compatible file into `modules/`.
 
-The `install_tools` module provides a menu-driven installer allowing automatic or manual installation of common tools.
+The launcher currently ships with the following first-party modules:
+
+* `install_tools` – menu-driven installer with automatic/manual modes, Termux-aware package catalogs and a system upgrade helper
+* `cli_tools` – collection of handy command-line utilities (history cleanup, IP discovery, traceroute, DNS/WHOIS lookups, speed tests, log tailing, resource monitoring, etc.)
+* `credits` – project credits
+
+New modules become available simply by dropping a compatible file into `modules/`.
 
 # Credits
 
