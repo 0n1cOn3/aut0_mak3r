@@ -1,81 +1,81 @@
 #!/bin/bash
-# Modular launcher for aut0 mak3r
+# Dynamic module loader
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
-MODULE_DIR="$ROOT_DIR/modules"
 # shellcheck source=lib/common.sh
 source "$ROOT_DIR/lib/common.sh"
+MODULE_DIR="$ROOT_DIR/modules"
 
-load_module_files() {
-  MODULE_FILES=()
-  while IFS= read -r file; do
-    MODULE_FILES+=("$file")
-  done < <(find "$MODULE_DIR" -maxdepth 1 -type f -name '*.sh' | sort)
-}
+declare -a MODULE_FILES=()
+declare -a MODULE_NAMES=()
 
-module_metadata() {
-  local file=$1 var=$2
-  bash -c "source \"$file\" >/dev/null 2>&1; echo \"\${$var:-}\""
-}
-
-module_name() {
-  local file=$1 name
-  name=$(module_metadata "$file" MODULE_NAME)
-  if [ -z "$name" ]; then
-    name=$(basename "$file" .sh)
-  fi
-  echo "$name"
-}
-
-module_desc() {
-  local file=$1
-  module_metadata "$file" MODULE_DESC
-}
-
-run_module() {
-  local file=$1
-  bash "$file"
-}
-
-main_menu() {
-  if [ ${#MODULE_FILES[@]} -eq 0 ]; then
-    error_exit "No modules found in $MODULE_DIR" "${ERR_FILE_NOT_FOUND:-1}"
-  fi
-
-  while true; do
-    print_section "Available modules"
-    local options=()
-    for file in "${MODULE_FILES[@]}"; do
-      local name desc label
-      name=$(module_name "$file")
-      desc=$(module_desc "$file")
-      label="$name"
-      if [ -n "$desc" ]; then
-        label="$label - $desc"
-      fi
-      options+=("$label")
-    done
-
-    local selection
-    selection=$(prompt_menu "Select a module:" "${options[@]}") || return 1
-    if [ "$selection" -eq -1 ]; then
-      break
-    fi
-
-    local index=$selection
-    if (( index >= 0 && index < ${#MODULE_FILES[@]} )); then
-      run_module "${MODULE_FILES[$index]}"
+load_modules() {
+  for f in "$MODULE_DIR"/*.sh; do
+    [ -f "$f" ] || continue
+    # shellcheck disable=SC1090
+    source "$f"
+    if [[ -n "${MODULE_NAME:-}" ]]; then
+      MODULE_FILES+=("$f")
+      MODULE_NAMES+=("$MODULE_NAME")
     else
-      log_warn "Invalid module index $index"
+      name=$(basename "$f" .sh)
+      MODULE_FILES+=("$f")
+      MODULE_NAMES+=("$name")
     fi
+    unset MODULE_NAME MODULE_DESC run
   done
 }
 
+print_menu() {
+  echo "Available modules:"
+  local i=1
+  for f in "${MODULE_FILES[@]}"; do
+    # shellcheck disable=SC1090
+    source "$f"
+    local desc="${MODULE_DESC:-}" name="${MODULE_NAME:-$(basename "$f" .sh)}"
+    printf "[%d] %s" "$i" "$name"
+    if [[ -n "$desc" ]]; then
+      printf " - %s" "$desc"
+    fi
+    printf "\n"
+    unset MODULE_NAME MODULE_DESC run
+    i=$((i+1))
+  done
+  echo "[q] Quit"
+}
+
+run_module() {
+  local idx=$1
+  local file="${MODULE_FILES[$idx]}"
+  # shellcheck disable=SC1090
+  source "$file"
+  if declare -f run >/dev/null; then
+    run
+  else
+    bash "$file"
+  fi
+  unset MODULE_NAME MODULE_DESC run
+}
+
 if [ ! -d "$MODULE_DIR" ]; then
-  error_exit "Module directory not found: $MODULE_DIR" "${ERR_FILE_NOT_FOUND:-1}"
+  error_exit "Module directory not found: $MODULE_DIR" "$ERR_FILE_NOT_FOUND"
 fi
 
-declare -a MODULE_FILES
-load_module_files
-main_menu
+load_modules
+if [ ${#MODULE_FILES[@]} -eq 0 ]; then
+  error_exit "No modules found in $MODULE_DIR" "$ERR_FILE_NOT_FOUND"
+fi
+
+while true; do
+  print_menu
+  read -rp "Select module: " choice
+  if [[ "$choice" == "q" ]]; then
+    break
+  elif [[ "$choice" =~ ^[0-9]+$ && choice -ge 1 && choice -le ${#MODULE_FILES[@]} ]]; then
+    run_module $((choice-1))
+  else
+    print_error "Invalid option" "$ERR_INVALID_OPTION"
+  fi
+  echo ""
+done
